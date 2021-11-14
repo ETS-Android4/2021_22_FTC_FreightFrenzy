@@ -25,7 +25,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Motor channel:  Right Back (RB) drive motor:        "rightBack"
  */
 
-abstract public class HardwareMap_example extends LinearOpMode
+public abstract class HardwareMap_example extends LinearOpMode
 {
     /* Public OpMode members. */
     // WAGS: The Robot Parts need to be established here
@@ -70,7 +70,7 @@ abstract public class HardwareMap_example extends LinearOpMode
 
         // Define and Initialize Motors
         /*
-            CHAWKS: The deviceName should ALWAYS ALWAYS ALWAYS
+            WAGS: The deviceName should ALWAYS ALWAYS ALWAYS
                     match the part name to avoid confusion
         */
 
