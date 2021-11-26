@@ -73,8 +73,8 @@ public class HolonomicDrive extends OpMode {
 
         robot.leftFront.setPower((mag2 - rotationPower) * scaleDown);
         robot.rightFront.setPower((mag1 + rotationPower) * scaleDown);
-        //robot.leftBack.setPower((mag1 - rotationPower) * scaleDown);
-        //robot.rightBack.setPower((mag2 + rotationPower) * scaleDown);
+        robot.leftBack.setPower((mag1 - rotationPower) * scaleDown);
+        robot.rightBack.setPower((mag2 + rotationPower) * scaleDown);
 
     }
 

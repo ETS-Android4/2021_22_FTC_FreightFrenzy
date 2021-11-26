@@ -75,6 +75,7 @@ public class IntakeTest extends OpMode{
         }else {
             telemetry.addData("Button","None");
             robot.leftIntake.setPower(0);
+            robot.rightIntake.setPower(0);
         }
 
 
