@@ -1,111 +1,137 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_Holonomic;
 
-//import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
-// List where other files are located that are used in this OpMode
 
 /**
- * In this example:
- * This file illustrates the concept of driving OUR robot in HardwareMap_Example
+ * This file illustrates the concept of driving a path based on encoder counts.
+ * It uses the common Pushbot hardware class to define the drive on the robot.
+ * The code is structured as a LinearOpMode
  *
+ * The code REQUIRES that you DO have encoders on the wheels,
+ *   otherwise you would use: PushbotAutoDriveByTime;
+ *
+ *  This code ALSO requires that the drive Motors have been configured such that a positive
+ *  power command moves them forwards, and causes the encoders to count UP.
+ *
+ *   The desired path in this example is:
+ *   - Drive forward for 48 inches
+ *   - Spin right for 12 Inches
+ *   - Drive Backwards for 24 inches
+ *   - Stop and close the claw.
+ *
+ *  The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
+ *  that performs the actual movement.
+ *  This methods assumes that each movement is relative to the last stopping place.
+ *  There are other ways to perform encoder based moves, but this method is probably the simplest.
+ *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
+ *
+ * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@Autonomous(name="B1 Park Warehouse", group="Blue_Autonomous")
+
+@Autonomous(name="B1 Park Warehouse", group="Blue")
 //@Disabled
 public class B1_Park_Warehouse extends LinearOpMode {
 
-    HardwareMap_Holonomic robot   = new HardwareMap_Holonomic();
+    /* Declare OpMode members. */
+    HardwareMap_Holonomic robot   = new HardwareMap_Holonomic();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 537.6 ;    // AndyMark NevRest 20:1
+    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 5.0 ;     // For figuring circumference
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
-        // MUST HAVE
-        @Override
-        public void runOpMode() {
-
-
-            // Initialize the drive system variables.
-            // The init() method of the hardware class does all the work here
-            // Initialize the drive system variables.
-            // The init() method of the hardware class does all the work here
+    @Override
+    public void runOpMode() {
 
         /*
-            WAGS: On Driver Station, telemetry will be display!
-                    Why is this good for the Drivers?
-        */
+         * Initialize the drive system variables.
+         * The init() method of the hardware class does all the work here
+         */
+        int state = 0;
+        if (state == 0){
+            //init robot
+            robot.init(hardwareMap);
+
+
             // Send telemetry message to signify robot waiting;
-            telemetry.addData("Status: ", "Hit [Init] to Initialize ze bot");    //
+            telemetry.addData("Status", "Resetting Encoders");    //
             telemetry.update();
 
-        /*
-            CHAWKS: Step 0. Initialize OUR ROBOT
-        */
-            // MUST HAVE THIS LINE BELOW
             robot.leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             robot.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+            // Send telemetry message to indicate successful Encoder reset
+            telemetry.addData("Path0",  "Starting at %7d :%7d",
+                    robot.leftFront.getCurrentPosition(),
+                    robot.rightFront.getCurrentPosition());
+            telemetry.update();
 
-            int state = 0;
-            if (state == 0){
-                //init robot
-                robot.init(hardwareMap);
-                waitForStart();
-                state = 1;
-            }
 
-            if (state == 1){
-                telemetry.addData("State","1");
-                telemetry.update();
-
-                //facing Forward strafe left one foot.
-                state = 2;
-            }
-
-            if (state == 2) {
-                telemetry.addData("State","2");
-                telemetry.update();
-
-                state = 3;
-            }
-
-            if (state == 3) {
-                telemetry.addData("State", "3");
-                telemetry.update();
-
-                //Move forward six feet.
-                state = 4;
-            }
-
-            if(state == 4){
-                telemetry.addData("State", "4");
-                telemetry.update();
-
-                //Move forward six feet.
-                state = 5;
-            }
-
-            //stop all motion
-
+            waitForStart();
+            state = 1;
         }
 
+
+        if (state == 1){
+            telemetry.addData("State","1");
+            telemetry.update();
+
+            //facing Forward strafe left one foot.
+            state = 2;
+        }
+
+        if (state == 2) {
+            telemetry.addData("State","2");
+            telemetry.update();
+
+            state = 3;
+        }
+
+        if (state == 3) {
+            telemetry.addData("State", "3");
+            telemetry.update();
+
+            //Move forward six feet.
+            state = 4;
+        }
+
+        if(state == 4){
+            telemetry.addData("State", "4");
+            telemetry.update();
+
+            //Move forward six feet.
+            state = 5;
+        }
+
+        //stop all motion
+      // encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+
+        // robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
+        // robot.rightClaw.setPosition(0.0);
+        sleep(1000);     // pause for servos to move
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+
+
+
+
+    }
 
     /*
      *  Method to perform a relative move, based on encoder counts.
@@ -168,8 +194,5 @@ public class B1_Park_Warehouse extends LinearOpMode {
             //  sleep(250);   // optional pause after each move
         }
     }
-
-
-
-
 }
+
