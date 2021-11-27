@@ -71,9 +71,13 @@ public class B1_Park_Warehouse extends LinearOpMode {
 
             robot.leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             robot.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             // Send telemetry message to indicate successful Encoder reset
             telemetry.addData("Path0",  "Starting at %7d :%7d",
@@ -90,22 +94,22 @@ public class B1_Park_Warehouse extends LinearOpMode {
         if (state == 1){
             telemetry.addData("State","1");
             telemetry.update();
-
+            encoderDrive(DRIVE_SPEED, 5, 5, 5, 5, 4.0);
             //facing Forward strafe left one foot.
             state = 2;
         }
-
+        //turning left
         if (state == 2) {
             telemetry.addData("State","2");
             telemetry.update();
-
+            encoderDrive(DRIVE_SPEED, -5, 5, -5, 5, 4.0);
             state = 3;
         }
 
         if (state == 3) {
             telemetry.addData("State", "3");
             telemetry.update();
-
+            encoderDrive(DRIVE_SPEED, 10, 10, 10, 10, 4.0);
             //Move forward six feet.
             state = 4;
         }
@@ -113,13 +117,17 @@ public class B1_Park_Warehouse extends LinearOpMode {
         if(state == 4){
             telemetry.addData("State", "4");
             telemetry.update();
+            robot.leftFront.setPower(0);
+            robot.rightFront.setPower(0);
+            robot.leftBack.setPower(0);
+            robot.rightBack.setPower(0);
 
             //Move forward six feet.
             state = 5;
         }
 
         //stop all motion
-      // encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+      // encoderDrive(  // S3: Reverse 24 Inches with 4 Sec timeout
 
         // robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
         // robot.rightClaw.setPosition(0.0);
@@ -142,10 +150,12 @@ public class B1_Park_Warehouse extends LinearOpMode {
      *  3) Driver stops the opmode running.
      */
     public void encoderDrive(double speed,
-                             double leftInches, double rightInches,
+                             double leftInches, double rightInches, double leftBackInches, double rightBackInches,
                              double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
+        int newLeftBackTarget;
+        int newRightBackTarget;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
@@ -153,17 +163,25 @@ public class B1_Park_Warehouse extends LinearOpMode {
             // Determine new target position, and pass to motor controller
             newLeftTarget = robot.leftFront.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
             newRightTarget = robot.rightFront.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newLeftBackTarget = robot.leftBack.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newRightBackTarget = robot.rightBack.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
             robot.leftFront.setTargetPosition(newLeftTarget);
             robot.rightFront.setTargetPosition(newRightTarget);
+            robot.leftBack.setTargetPosition(newLeftBackTarget);
+            robot.rightBack.setTargetPosition(newRightBackTarget);
 
             // Turn On RUN_TO_POSITION
             robot.leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
             robot.leftFront.setPower(Math.abs(speed));
             robot.rightFront.setPower(Math.abs(speed));
+            robot.leftBack.setPower(Math.abs(speed));
+            robot.rightBack.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -186,10 +204,14 @@ public class B1_Park_Warehouse extends LinearOpMode {
             // Stop all motion;
             robot.leftFront.setPower(0);
             robot.rightFront.setPower(0);
+            robot.leftBack.setPower(0);
+            robot.rightBack.setPower(0);
 
             // Turn off RUN_TO_POSITION
             robot.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             //  sleep(250);   // optional pause after each move
         }
