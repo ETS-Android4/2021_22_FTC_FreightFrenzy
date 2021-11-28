@@ -36,9 +36,9 @@ import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_Holonomic;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="B1 Park Warehouse", group="Blue")
+@Autonomous(name="R2 Park StorageUnit", group="Red")
 //@Disabled
-public class B1_Park_Warehouse extends LinearOpMode {
+public class R2_Park_StorageUnit extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMap_Holonomic robot   = new HardwareMap_Holonomic();   // Use a Pushbot's hardware
@@ -94,7 +94,7 @@ public class B1_Park_Warehouse extends LinearOpMode {
         if (state == 1){
             telemetry.addData("State","1");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 5, 5, 5, 5, 4.0);
+            encoderDrive(DRIVE_SPEED, 6.5, 6.5, 6.5, 6.5, 4.0);
             //facing Forward strafe left one foot.
             state = 2;
         }
@@ -109,7 +109,7 @@ public class B1_Park_Warehouse extends LinearOpMode {
         if (state == 3) {
             telemetry.addData("State", "3");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 10, 10, 10, 10, 4.0);
+            encoderDrive(DRIVE_SPEED, 7, 7, 7, 7, 4.0);
             //Move forward six feet.
             state = 4;
         }
@@ -127,7 +127,7 @@ public class B1_Park_Warehouse extends LinearOpMode {
         }
 
         //stop all motion
-      // encoderDrive(  // S3: Reverse 24 Inches with 4 Sec timeout
+        // encoderDrive(  // S3: Reverse 24 Inches with 4 Sec timeout
 
         // robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
         // robot.rightClaw.setPosition(0.0);
@@ -217,4 +217,3 @@ public class B1_Park_Warehouse extends LinearOpMode {
         }
     }
 }
-

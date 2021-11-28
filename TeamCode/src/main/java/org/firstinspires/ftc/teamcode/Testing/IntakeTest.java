@@ -43,7 +43,7 @@ public class IntakeTest extends OpMode{
     @Override
     public void loop() {
 
-        boolean isButtonB= gamepad1.b;
+        boolean isButtonB = gamepad1.b;
         boolean isButtonA = gamepad1.a;
         boolean isButtonX = gamepad1.x;
         boolean isButtonY = gamepad1.y;

@@ -5,13 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_Holonomic;
+import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_RackAndPinion;
 
 // name this OpMode and determine a group
-@TeleOp (name="HolonomicDrive", group="TeleOP")
-public class HolonomicDrive extends OpMode {
+@TeleOp (name="RackAndPinion", group="TeleOP")
+public class RackAndPinion extends OpMode {
 
     /* Declare OpMode members. */
-    HardwareMap_Holonomic robot       = new HardwareMap_Holonomic();
+    HardwareMap_RackAndPinion robot       = new HardwareMap_RackAndPinion();
 
     @Override
     public void init() {
@@ -75,6 +76,59 @@ public class HolonomicDrive extends OpMode {
         robot.rightFront.setPower((mag1 + rotationPower) * scaleDown);
         robot.leftBack.setPower((mag1 - rotationPower) * scaleDown);
         robot.rightBack.setPower((mag2 + rotationPower) * scaleDown);
+
+        boolean isButtonB = gamepad1.b;
+        boolean isButtonA = gamepad1.a;
+        boolean isButtonX = gamepad1.x;
+        boolean isButtonY = gamepad1.y;
+
+        boolean isButtonLB = gamepad1.left_bumper;
+        boolean isButtonRB = gamepad1.right_bumper;
+
+        double speed = 0.5;
+
+        if (isButtonRB) {
+            robot.lift.setPower(speed);
+            telemetry.addData("Button","A");
+            //A is retract
+        } else if (isButtonLB) {
+            robot.lift.setPower(-speed);
+            telemetry.addData("Button","B");
+            //B is extend
+        }else {
+            telemetry.addData("Button","None");
+            robot.lift.setPower(0);
+        }
+
+
+
+        if (isButtonA) {
+            robot.leftIntake.setPower(speed);
+            robot.rightIntake.setPower(speed);
+            telemetry.addData("Button","A");
+            //A is retract
+        } else if (isButtonB) {
+            robot.leftIntake.setPower(-speed);
+            robot.rightIntake.setPower(-speed);
+            telemetry.addData("Button","B");
+            //B is extend
+        } else if (isButtonX) {
+            robot.leftIntake.setPower(1);
+            robot.rightIntake.setPower(1);
+            telemetry.addData("Button","X");
+            //X is retract, but with full power
+
+        }  else if (isButtonY) {
+            robot.leftIntake.setPower(-1);
+            robot.rightIntake.setPower(-1);
+            telemetry.addData("Button","X");
+            //X is retract, but with full power
+
+        }else {
+            telemetry.addData("Button","None");
+            robot.leftIntake.setPower(0);
+            robot.rightIntake.setPower(0);
+        }
 
     }
 
