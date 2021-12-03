@@ -77,13 +77,13 @@ public class RackAndPinion extends OpMode {
         robot.leftBack.setPower((mag1 - rotationPower) * scaleDown);
         robot.rightBack.setPower((mag2 + rotationPower) * scaleDown);
 
-        boolean isButtonB = gamepad1.b;
-        boolean isButtonA = gamepad1.a;
-        boolean isButtonX = gamepad1.x;
-        boolean isButtonY = gamepad1.y;
+        boolean isButtonB = gamepad2.b;
+        boolean isButtonA = gamepad2.a;
+        boolean isButtonX = gamepad2.x;
+        boolean isButtonY = gamepad2.y;
 
-        boolean isButtonLB = gamepad1.left_bumper;
-        boolean isButtonRB = gamepad1.right_bumper;
+        boolean isButtonLB = gamepad2.left_bumper;
+        boolean isButtonRB = gamepad2.right_bumper;
 
         double speed = 0.5;
 
