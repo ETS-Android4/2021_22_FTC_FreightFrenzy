@@ -127,7 +127,7 @@ public class B1_Park_Warehouse extends LinearOpMode {
         }
 
         //stop all motion
-      // encoderDrive(  // S3: Reverse 24 Inches with 4 Sec timeout
+        // encoderDrive(  // S3: Reverse 24 Inches with 4 Sec timeout
 
         // robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
         // robot.rightClaw.setPosition(0.0);

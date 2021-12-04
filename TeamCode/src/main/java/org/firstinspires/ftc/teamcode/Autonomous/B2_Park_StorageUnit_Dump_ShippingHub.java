@@ -88,7 +88,6 @@ public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
             waitForStart();
             state = 1;
         }
-
         //moving forward several inches
         if (state == 1){
             telemetry.addData("State","1");
@@ -104,40 +103,44 @@ public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
             encoderDrive(DRIVE_SPEED, -5, 5, 5, -5, 4.0);
             state = 3;
         }
-        //moving forward several inches
+        //aligning with alliance shipping hub
         if (state == 3) {
             telemetry.addData("State", "3");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, , 2.5, 2.5, 5, 4.0);
-            //Move forward six feet.
+            encoderDrive(DRIVE_SPEED, 1, 1, 1, 1, 4.0);
             state = 4;
         }
-        //stopping robot
+        //deposit freight in alliance shipping hub
         if(state == 4){
             telemetry.addData("State", "4");
+            telemetry.update();
+            retractFreight(5, 1);
+            state = 5;
+        }
+        //stop all intake motors
+        if(state == 5){
+            telemetry.addData("State", "5");
+            telemetry.update();
+            robot.leftIntake.setPower(0);
+            robot.rightIntake.setPower(0);
+            state = 6;
+        }
+        //strafing into warehouse
+        if (state == 6) {
+            telemetry.addData("State","6");
+            telemetry.update();
+            encoderDrive(DRIVE_SPEED, -10, 10, 10, -10, 4.0);
+            state = 7;
+        }
+        //stopping robot
+        if(state == 7){
+            telemetry.addData("State", "7");
             telemetry.update();
             robot.leftFront.setPower(0);
             robot.rightFront.setPower(0);
             robot.leftBack.setPower(0);
             robot.rightBack.setPower(0);
-
-            //Move forward six feet.
-            state = 5;
-        }
-        if(state == 5){
-            telemetry.addData("State", "4");
-            telemetry.update();
-            retractFreight(5, 1);
-            //Move forward six feet.
-            state = 6;
-        }
-        if(state == 6){
-        telemetry.addData("State", "4");
-        telemetry.update();
-        robot.leftIntake.setPower(0);
-        robot.rightIntake.setPower(0);
-        //Move forward six feet.
-        state = 7;
+            state = 8;
         }
         //stop all motion
         // encoderDrive(  // S3: Reverse 24 Inches with 4 Sec timeout
