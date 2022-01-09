@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_Holonomic;
+import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_RackAndPinion;
 
 
 /**
@@ -40,7 +41,7 @@ import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_Holonomic;
 public class B1_Park_Warehouse_ShippingHub extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwareMap_Holonomic robot   = new HardwareMap_Holonomic();   // Use a Pushbot's hardware
+    HardwareMap_RackAndPinion robot   = new HardwareMap_RackAndPinion();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -89,42 +90,87 @@ public class B1_Park_Warehouse_ShippingHub extends LinearOpMode {
             state = 1;
         }
 
-        //moving forward several inches
+        //move forward
         if (state == 1){
             telemetry.addData("State","1");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 5, 5, 5, 5, 4.0);
-            //facing Forward strafe left one foot.
+            encoderDrive(DRIVE_SPEED, 4, 4, 4, 4, 4.0);
             state = 2;
         }
-        //turning left
+        //turn right
         if (state == 2) {
             telemetry.addData("State","2");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
+            encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
             state = 3;
         }
-        //moving forward several inches
+        //move forward
         if (state == 3) {
             telemetry.addData("State", "3");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 10, 10, 10, 10, 4.0);
-            //Move forward six feet.
+            encoderDrive(DRIVE_SPEED, 5, 5, 5, 5, 4.0);
             state = 4;
         }
-        //stopping robot
-        if(state == 4){
-            telemetry.addData("State", "4");
+        //turn left
+        if (state == 4) {
+            telemetry.addData("State","4");
+            telemetry.update();
+            encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
+            state = 5;
+        }
+        //move forward
+        if (state == 5) {
+            telemetry.addData("State", "5");
+            telemetry.update();
+            encoderDrive(DRIVE_SPEED, 2, 2, 2, 2, 4.0);
+            state = 6;
+        }
+        //deposit
+        if(state == 6){
+            telemetry.addData("State", "6");
+            telemetry.update();
+            retractFreight(3, 1);
+            state = 7;
+        }
+        //stop intake motors
+        if(state == 7){
+            telemetry.addData("State", "7");
+            telemetry.update();
+            robot.leftIntake.setPower(0);
+            robot.rightIntake.setPower(0);
+            state = 8;
+        }
+        //back up
+        if (state == 8) {
+            telemetry.addData("State", "8");
+            telemetry.update();
+            encoderDrive(DRIVE_SPEED, -1, -1, -1, -1, 4.0);
+            state = 9;
+        }
+        //turn left
+        if (state == 9) {
+            telemetry.addData("State","9");
+            telemetry.update();
+            encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
+            state = 10;
+        }
+        //move forward
+        if (state == 10) {
+            telemetry.addData("State", "10");
+            telemetry.update();
+            encoderDrive(DRIVE_SPEED, 14, 14, 14, 14, 4.0);
+            state = 11;
+        }
+        //stop robot
+        if(state == 11){
+            telemetry.addData("State", "11");
             telemetry.update();
             robot.leftFront.setPower(0);
             robot.rightFront.setPower(0);
             robot.leftBack.setPower(0);
             robot.rightBack.setPower(0);
-
-            //Move forward six feet.
-            state = 5;
+            state = 12;
         }
-
         //stop all motion
       // encoderDrive(  // S3: Reverse 24 Inches with 4 Sec timeout
 
@@ -213,6 +259,13 @@ public class B1_Park_Warehouse_ShippingHub extends LinearOpMode {
             robot.rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             //  sleep(250);   // optional pause after each move
+        }
+    }
+    public void retractFreight(double freightTime, double freightSpeed) {
+        while (opModeIsActive() &&
+                (runtime.seconds() < freightTime)) {
+            robot.leftIntake.setPower(freightSpeed);
+            robot.rightIntake.setPower(freightSpeed);
         }
     }
 }

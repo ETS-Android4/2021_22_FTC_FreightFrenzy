@@ -85,11 +85,25 @@ public class RackAndPinion extends OpMode {
         boolean isButtonLB = gamepad2.left_bumper;
         boolean isButtonRB = gamepad2.right_bumper;
 
+        boolean isButtonDU = gamepad2.dpad_up;
+        boolean isButtonDR = gamepad2.dpad_right;
+        boolean isButtonDL = gamepad2.dpad_left;
+        boolean isButtonDD = gamepad2.dpad_down;
+
+        boolean isBDU = gamepad1.dpad_up;
+        boolean isBDR = gamepad1.dpad_right;
+        boolean isBDL = gamepad1.dpad_left;
+        boolean isBDD = gamepad1.dpad_down;
+
         double speed = 0.5;
 
         if (isButtonRB) {
             robot.lift.setPower(speed);
-            telemetry.addData("Button","A");
+            telemetry.addData("Button","RB");
+            //A is retract
+        } else if (isButtonLB) {
+            robot.lift.setPower(-speed);
+            telemetry.addData("Button","LB");
             //A is retract
         } else if (isButtonLB) {
             robot.lift.setPower(-speed);
@@ -123,13 +137,55 @@ public class RackAndPinion extends OpMode {
             robot.rightIntake.setPower(-1);
             telemetry.addData("Button","X");
             //X is retract, but with full power
-
         }else {
             telemetry.addData("Button","None");
             robot.leftIntake.setPower(0);
             robot.rightIntake.setPower(0);
         }
 
+        if (isButtonDU) {
+            robot.duckMotor.setPower(speed);
+            telemetry.addData("Button","DU");
+            //A is retract
+        } else if (isButtonDD) {
+            robot.duckMotor.setPower(-speed);
+            telemetry.addData("Button","DD");
+            //B is extend
+        } else if (isButtonDR) {
+            robot.duckMotor.setPower(1);
+            telemetry.addData("Button","DR");
+            //X is retract, but with full power
+
+        }  else if (isButtonDL) {
+            robot.duckMotor.setPower(-1);
+            telemetry.addData("Button","DL");
+            //X is retract, but with full power
+        }else {
+            telemetry.addData("Button","None");
+            robot.duckMotor.setPower(0);
+        }
+
+        if (isBDU) {
+            robot.duckMotor.setPower(speed);
+            telemetry.addData("Button","DU");
+            //A is retract
+        } else if (isBDD) {
+            robot.duckMotor.setPower(-speed);
+            telemetry.addData("Button","DD");
+            //B is extend
+        } else if (isBDR) {
+            robot.duckMotor.setPower(1);
+            telemetry.addData("Button","DR");
+            //X is retract, but with full power
+
+        }  else if (isBDL) {
+            robot.duckMotor.setPower(-1);
+            telemetry.addData("Button","DL");
+            //X is retract, but with full power
+        }else {
+            telemetry.addData("Button","None");
+            robot.duckMotor.setPower(0);
+        }
     }
 
     /*

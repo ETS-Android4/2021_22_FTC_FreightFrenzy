@@ -110,7 +110,6 @@ public class B2_Park_StorageUnit_Dump extends LinearOpMode {
             telemetry.addData("State", "3");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 5, 5, 5, 5, 4.0);
-            //Move forward six feet.
             state = 4;
         }
         //stopping robot
@@ -121,23 +120,21 @@ public class B2_Park_StorageUnit_Dump extends LinearOpMode {
             robot.rightFront.setPower(0);
             robot.leftBack.setPower(0);
             robot.rightBack.setPower(0);
-
-            //Move forward six feet.
             state = 5;
         }
+        //deposit freight in shipping hub
         if(state == 5){
-            telemetry.addData("State", "4");
+            telemetry.addData("State", "5");
             telemetry.update();
-            retractFreight(5, 1);
-            //Move forward six feet.
+            retractFreight(3, 1);
             state = 6;
         }
+        //stop all intake motors
         if(state == 6){
-        telemetry.addData("State", "4");
+        telemetry.addData("State", "6");
         telemetry.update();
         robot.leftIntake.setPower(0);
         robot.rightIntake.setPower(0);
-        //Move forward six feet.
         state = 7;
         }
         //stop all motion

@@ -35,9 +35,9 @@ import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_RackAndPinion;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="B2 Park StorageUnit Dump ShippingHub", group="Blue")
+@Autonomous(name="R1 Park Warehouse ShippingHub", group="Red")
 //@Disabled
-public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
+public class R1_Park_Warehouse_ShippingHub extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMap_RackAndPinion robot   = new HardwareMap_RackAndPinion();   // Use a Pushbot's hardware
@@ -88,75 +88,76 @@ public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
             waitForStart();
             state = 1;
         }
-        //moving forward several inches
+
+        //move forward
         if (state == 1){
             telemetry.addData("State","1");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 10, 10,10, 10, 4.0);
+            encoderDrive(DRIVE_SPEED, 4, 4, 4, 4, 4.0);
             state = 2;
-        //turn left
         }
-        if (state == 2){
+        //turn left
+        if (state == 2) {
             telemetry.addData("State","2");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -5, 5,-5, -5, 4.0);
+            encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
             state = 3;
         }
-        //move forward to shipping hub
+        //move forward
         if (state == 3) {
             telemetry.addData("State", "3");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 1.5, 1.5, 1.5, 1.5, 4.0);
+            encoderDrive(DRIVE_SPEED, 5, 5, 5, 5, 4.0);
             state = 4;
         }
-        //deposit freight
-        if(state == 4){
-            telemetry.addData("State", "4");
+        //turn right
+        if (state == 4) {
+            telemetry.addData("State","4");
             telemetry.update();
-            retractFreight(3, 1);
+            encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
             state = 5;
         }
-        //stop intake motors
-        if(state == 5){
+        //move forward
+        if (state == 5) {
             telemetry.addData("State", "5");
+            telemetry.update();
+            encoderDrive(DRIVE_SPEED, 2, 2, 2, 2, 4.0);
+            state = 6;
+        }
+        //deposit
+        if(state == 6){
+            telemetry.addData("State", "6");
+            telemetry.update();
+            retractFreight(3, 1);
+            state = 7;
+        }
+        //stop intake motors
+        if(state == 7){
+            telemetry.addData("State", "7");
             telemetry.update();
             robot.leftIntake.setPower(0);
             robot.rightIntake.setPower(0);
-            state = 6;
-        }
-        //back up
-        if (state == 6){
-            telemetry.addData("State","6");
-            telemetry.update();
-            encoderDrive(DRIVE_SPEED, -1, -1,-1, -1, 4.0);
-            state = 7;
-        }
-        //turn right
-        if (state == 7) {
-            telemetry.addData("State", "7");
-            telemetry.update();
-            encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
             state = 8;
         }
         //back up
-        if (state == 8){
-            telemetry.addData("State","8");
+        if (state == 8) {
+            telemetry.addData("State", "8");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -3.0, -3.0,-3.0, -3.0, 4.0);
+            encoderDrive(DRIVE_SPEED, -1, -1, -1, -1, 4.0);
             state = 9;
         }
-        //turn left
+        //turn right
         if (state == 9) {
-            telemetry.addData("State", "9");
+            telemetry.addData("State","9");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
+            encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
             state = 10;
         }
-        //back up
-        if (state == 10){
-            telemetry.addData("State","10");
+        //move forward
+        if (state == 10) {
+            telemetry.addData("State", "10");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -6.5, -6.5,-6.5, -6.5, 4.0);
+            encoderDrive(DRIVE_SPEED, 14, 14, 14, 14, 4.0);
             state = 11;
         }
         //stop robot
@@ -169,15 +170,8 @@ public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
             robot.rightBack.setPower(0);
             state = 12;
         }
-        //strafe right
-        //if (state == 2) {
-            //telemetry.addData("State","2");
-            //telemetry.update();
-            //encoderDrive(DRIVE_SPEED, 5, -5, -5, 5, 4.0);
-            //state = 3;
-
         //stop all motion
-        // encoderDrive(  // S3: Reverse 24 Inches with 4 Sec timeout
+      // encoderDrive(  // S3: Reverse 24 Inches with 4 Sec timeout
 
         // robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
         // robot.rightClaw.setPosition(0.0);
@@ -185,6 +179,9 @@ public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
+
+
+
 
     }
 
@@ -265,9 +262,10 @@ public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
     }
     public void retractFreight(double freightTime, double freightSpeed) {
         while (opModeIsActive() &&
-                (runtime.seconds() < freightTime)){
+                (runtime.seconds() < freightTime)) {
             robot.leftIntake.setPower(freightSpeed);
             robot.rightIntake.setPower(freightSpeed);
         }
     }
 }
+
