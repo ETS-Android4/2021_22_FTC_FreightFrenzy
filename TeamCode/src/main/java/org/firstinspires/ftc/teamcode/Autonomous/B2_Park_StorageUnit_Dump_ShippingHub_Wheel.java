@@ -35,21 +35,21 @@ import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_RackAndPinion;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="B2 Park StorageUnit Dump ShippingHub", group="Blue")
+@Autonomous(name="B2 Park StorageUnit Dump ShippingHub Wheel", group="Blue")
 //@Disabled
-public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
+public class B2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwareMap_RackAndPinion robot   = new HardwareMap_RackAndPinion();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
+    HardwareMap_RackAndPinion robot = new HardwareMap_RackAndPinion();   // Use a Pushbot's hardware
+    private ElapsedTime runtime = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
+    static final double DRIVE_SPEED = 0.6;
+    static final double TURN_SPEED = 0.5;
 
     @Override
     public void runOpMode() {
@@ -59,7 +59,7 @@ public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         int state = 0;
-        if (state == 0){
+        if (state == 0) {
             //init robot
             robot.init(hardwareMap);
 
@@ -79,102 +79,125 @@ public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
             robot.rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             // Send telemetry message to indicate successful Encoder reset
-            telemetry.addData("Path0",  "Starting at %7d :%7d",
+            telemetry.addData("Path0", "Starting at %7d :%7d",
                     robot.leftFront.getCurrentPosition(),
                     robot.rightFront.getCurrentPosition());
             telemetry.update();
 
 
             waitForStart();
-            state = 1;
-        }
-        //moving forward several inches
-        if (state == 1){
-            telemetry.addData("State","1");
-            telemetry.update();
-            encoderDrive(DRIVE_SPEED, 10, 10,10, 10, 4.0);
             state = 2;
-        //turn left
         }
-        if (state == 2){
-            telemetry.addData("State","2");
+        //lifting attachment
+        /*if (state == 1) {
+            telemetry.addData("State", "2");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -5, 5,-5, -5, 4.0);
-            state = 3;
-        }
-        //move forward to shipping hub
-        if (state == 3) {
+            liftUp(3, -0.5);
+            state = 2;
+        }*/
+        //stop lift
+        if (state == 2) {
             telemetry.addData("State", "3");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 1.5, 1.5, 1.5, 1.5, 4.0);
+            robot.lift.setPower(0);
+            state = 3;
+        }
+        //moving forward several inches
+        if (state == 3) {
+            telemetry.addData("State", "2");
+            telemetry.update();
+            encoderDrive(DRIVE_SPEED, 10, 10, 10, 10, 4.0);
             state = 4;
+            //turn left
+        }
+        if (state == 4) {
+            telemetry.addData("State", "2");
+            telemetry.update();
+            encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
+            state = 5;
+        }
+        //move forward to shipping hub
+        if (state == 5) {
+            telemetry.addData("State", "3");
+            telemetry.update();
+            encoderDrive(DRIVE_SPEED, 2, 2, 2, 2, 4.0);
+            state = 6;
         }
         //deposit freight
-        if(state == 4){
+        if (state == 6) {
             telemetry.addData("State", "4");
             telemetry.update();
             retractFreight(3, 1);
-            state = 5;
+            state = 7;
         }
         //stop intake motors
-        if(state == 5){
+        if (state == 7) {
             telemetry.addData("State", "5");
             telemetry.update();
             robot.leftIntake.setPower(0);
             robot.rightIntake.setPower(0);
-            state = 6;
-        }
-        //back up
-        if (state == 6){
-            telemetry.addData("State","6");
-            telemetry.update();
-            encoderDrive(DRIVE_SPEED, -1, -1,-1, -1, 4.0);
-            state = 7;
-        }
-        //turn right
-        if (state == 7) {
-            telemetry.addData("State", "7");
-            telemetry.update();
-            encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
             state = 8;
         }
         //back up
-        if (state == 8){
-            telemetry.addData("State","8");
+        if (state == 8) {
+            telemetry.addData("State", "6");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -3.0, -3.0,-3.0, -3.0, 4.0);
+            encoderDrive(DRIVE_SPEED, -9.5, -9.5, -9.5, -9.5, 4.0);
             state = 9;
         }
-        //turn left
+        //turn right
         if (state == 9) {
-            telemetry.addData("State", "9");
+            telemetry.addData("State", "7");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
+            encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
             state = 10;
         }
         //back up
-        if (state == 10){
-            telemetry.addData("State","10");
+        if (state == 10) {
+            telemetry.addData("State", "8");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -6.5, -6.5,-6.5, -6.5, 4.0);
+            encoderDrive(0.3, -8, -8, -8, -8, 4.0);
             state = 11;
         }
-        //stop robot
-        if(state == 11){
+        //spin wheel
+        if (state == 11) {
             telemetry.addData("State", "11");
+            telemetry.update();
+            spinWheel(7, 1);
+            state = 12;
+        }
+        //stop duckWheel
+        if (state == 12) {
+            telemetry.addData("State", "12");
+            telemetry.update();
+            robot.duckMotor.setPower(0);
+            robot.duckMotor.setPower(0);
+            state = 13;
+        }
+        //move forward
+        if (state == 13) {
+            telemetry.addData("State", "13");
+            telemetry.update();
+            encoderDrive(DRIVE_SPEED, 5, 5, 5, 5, 4.0);
+            state = 14;
+        }
+        //stop robot
+        if (state == 14) {
+            telemetry.addData("State", "18");
             telemetry.update();
             robot.leftFront.setPower(0);
             robot.rightFront.setPower(0);
             robot.leftBack.setPower(0);
             robot.rightBack.setPower(0);
-            state = 12;
+            state = 15;
         }
+        //
         //strafe right
         //if (state == 2) {
-            //telemetry.addData("State","2");
-            //telemetry.update();
-            //encoderDrive(DRIVE_SPEED, 5, -5, -5, 5, 4.0);
-            //state = 3;
+        //telemetry.addData("State","2");
+        //telemetry.update();
+        //encoderDrive(DRIVE_SPEED, 5, -5, -5, 5, 4.0);
+        //state = 3;
 
         //stop all motion
         // encoderDrive(  // S3: Reverse 24 Inches with 4 Sec timeout
@@ -208,10 +231,10 @@ public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.leftFront.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = robot.rightFront.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newLeftBackTarget = robot.leftBack.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightBackTarget = robot.rightBack.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newLeftTarget = robot.leftFront.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+            newRightTarget = robot.rightFront.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+            newLeftBackTarget = robot.leftBack.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+            newRightBackTarget = robot.rightBack.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
             robot.leftFront.setTargetPosition(newLeftTarget);
             robot.rightFront.setTargetPosition(newRightTarget);
             robot.leftBack.setTargetPosition(newLeftBackTarget);
@@ -241,8 +264,8 @@ public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
                     (robot.leftFront.isBusy() && robot.rightFront.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
+                telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d",
                         robot.leftFront.getCurrentPosition(),
                         robot.rightFront.getCurrentPosition());
                 telemetry.update();
@@ -263,11 +286,24 @@ public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
             //  sleep(250);   // optional pause after each move
         }
     }
+
     public void retractFreight(double freightTime, double freightSpeed) {
         while (opModeIsActive() &&
-                (runtime.seconds() < freightTime)){
+                (runtime.seconds() < freightTime)) {
             robot.leftIntake.setPower(freightSpeed);
             robot.rightIntake.setPower(freightSpeed);
+        }
+    }
+    public void spinWheel(double wheelTime, double wheelSpeed) {
+        while (opModeIsActive() &&
+                (runtime.seconds() < wheelTime)) {
+            robot.duckMotor.setPower(wheelSpeed);
+        }
+    }
+    public void liftUp(double liftTime, double liftSpeed) {
+        while (opModeIsActive() &&
+                (runtime.seconds() < liftTime)) {
+            robot.lift.setPower(liftSpeed);
         }
     }
 }

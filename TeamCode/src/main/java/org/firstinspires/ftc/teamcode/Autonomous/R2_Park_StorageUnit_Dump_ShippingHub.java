@@ -35,9 +35,9 @@ import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_RackAndPinion;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="B2 Park StorageUnit Dump ShippingHub", group="Blue")
+@Autonomous(name="R2 Park StorageUnit Dump ShippingHub", group="Red")
 //@Disabled
-public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
+public class R2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMap_RackAndPinion robot   = new HardwareMap_RackAndPinion();   // Use a Pushbot's hardware
@@ -94,12 +94,12 @@ public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 10, 10,10, 10, 4.0);
             state = 2;
-        //turn left
+        //turn right
         }
         if (state == 2){
             telemetry.addData("State","2");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -5, 5,-5, -5, 4.0);
+            encoderDrive(DRIVE_SPEED, 5, -5,5, -5, 4.0);
             state = 3;
         }
         //move forward to shipping hub
@@ -131,18 +131,18 @@ public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
             encoderDrive(DRIVE_SPEED, -1, -1,-1, -1, 4.0);
             state = 7;
         }
-        //turn right
+        //turn left
         if (state == 7) {
             telemetry.addData("State", "7");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
+            encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
             state = 8;
         }
         //back up
         if (state == 8){
             telemetry.addData("State","8");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -3.0, -3.0,-3.0, -3.0, 4.0);
+            encoderDrive(DRIVE_SPEED, -3.5, -3.5,-3.5, -3.5, 4.0);
             state = 9;
         }
         //turn left
@@ -152,11 +152,11 @@ public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
             encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
             state = 10;
         }
-        //back up
+        //move forward
         if (state == 10){
             telemetry.addData("State","10");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -6.5, -6.5,-6.5, -6.5, 4.0);
+            encoderDrive(DRIVE_SPEED, 6.5, 6.5,6.5, 6.5, 4.0);
             state = 11;
         }
         //stop robot

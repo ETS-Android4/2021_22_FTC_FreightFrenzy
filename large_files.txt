@@ -1,0 +1,6 @@
+522632454 java_pid18356.hprof
+17356216 libs/arm64-v8a/libVuforia.so
+13870176 libs/armeabi-v7a/libVuforia.so
+3208920 FtcRobotController/src/main/assets/UltimateGoal.tflite
+2376501 libs/tensorflow-lite-0.0.0-nightly.aar
+1300813 libs/tfod-release.aar
