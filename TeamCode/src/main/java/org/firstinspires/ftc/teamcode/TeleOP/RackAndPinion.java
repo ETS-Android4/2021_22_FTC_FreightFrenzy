@@ -1,18 +1,16 @@
 package org.firstinspires.ftc.teamcode.TeleOP;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_Holonomic;
-import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_RackAndPinion;
+import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_CompetitionBot;
 
 // name this OpMode and determine a group
 @TeleOp (name="RackAndPinion", group="TeleOP")
 public class RackAndPinion extends OpMode {
 
     /* Declare OpMode members. */
-    HardwareMap_RackAndPinion robot       = new HardwareMap_RackAndPinion();
+    HardwareMap_CompetitionBot robot       = new HardwareMap_CompetitionBot();
 
     @Override
     public void init() {

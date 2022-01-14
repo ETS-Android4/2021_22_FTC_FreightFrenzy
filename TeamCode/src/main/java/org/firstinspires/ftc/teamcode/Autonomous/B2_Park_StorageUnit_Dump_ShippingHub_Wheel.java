@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_RackAndPinion;
+import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_CompetitionBot;
 
 
 /**
@@ -40,7 +40,7 @@ import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_RackAndPinion;
 public class B2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwareMap_RackAndPinion robot = new HardwareMap_RackAndPinion();   // Use a Pushbot's hardware
+    HardwareMap_CompetitionBot robot = new HardwareMap_CompetitionBot();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
 
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder

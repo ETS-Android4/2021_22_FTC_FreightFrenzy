@@ -26,7 +26,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Motor channel:  Right Back (RB) drive motor:        "rightBack"
  */
 
-public class HardwareMap_RackAndPinion
+public class HardwareMap_CompetitionBot
 {
     /* Public OpMode members. */
     public DcMotor  leftFront   = null;
@@ -45,7 +45,7 @@ public class HardwareMap_RackAndPinion
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public HardwareMap_RackAndPinion(){
+    public HardwareMap_CompetitionBot(){
 
     }
 
