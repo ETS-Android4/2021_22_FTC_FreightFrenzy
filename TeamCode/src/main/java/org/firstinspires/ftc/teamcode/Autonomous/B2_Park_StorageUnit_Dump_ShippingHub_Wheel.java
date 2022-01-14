@@ -102,14 +102,14 @@ public class B2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
             robot.lift.setPower(0);
             state = 3;
         }
-        //moving forward several inches
+        //move forward several inches to duck placement line
         if (state == 3) {
             telemetry.addData("State", "2");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 10, 10, 10, 10, 4.0);
             state = 4;
-            //turn left
         }
+        //turn left so intake system is facing shipping hub
         if (state == 4) {
             telemetry.addData("State", "2");
             telemetry.update();
@@ -138,21 +138,21 @@ public class B2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
             robot.rightIntake.setPower(0);
             state = 8;
         }
-        //back up
+        //back up until back of robot almost hits the wall
         if (state == 8) {
             telemetry.addData("State", "6");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, -9.5, -9.5, -9.5, -9.5, 4.0);
             state = 9;
         }
-        //turn right
+        //turn right so duck wheel is in line with wheel
         if (state == 9) {
             telemetry.addData("State", "7");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
             state = 10;
         }
-        //back up
+        //back up so duck wheel hits wheel and can begin spinning it
         if (state == 10) {
             telemetry.addData("State", "8");
             telemetry.update();
@@ -174,7 +174,7 @@ public class B2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
             robot.duckMotor.setPower(0);
             state = 13;
         }
-        //move forward
+        //move forward into storage unit
         if (state == 13) {
             telemetry.addData("State", "13");
             telemetry.update();

@@ -88,13 +88,13 @@ public class R2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
             waitForStart();
             state = 1;
         }
-        //moving forward several inches
+        //moving forward several inches to duck placement line
         if (state == 1){
             telemetry.addData("State","1");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 10, 10,10, 10, 4.0);
             state = 2;
-        //turn right
+        //turn right so intake system faces shipping hub
         }
         if (state == 2){
             telemetry.addData("State","2");

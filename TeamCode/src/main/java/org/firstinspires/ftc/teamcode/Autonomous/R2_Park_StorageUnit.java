@@ -90,7 +90,7 @@ public class R2_Park_StorageUnit extends LinearOpMode {
             state = 1;
         }
 
-        //moving forward several inches
+        //moving forward several inches to duck placement line
         if (state == 1){
             telemetry.addData("State","1");
             telemetry.update();
@@ -98,14 +98,14 @@ public class R2_Park_StorageUnit extends LinearOpMode {
             //facing Forward strafe left one foot.
             state = 2;
         }
-        //turning left
+        //turning left so front of robot faces storage unit wall
         if (state == 2) {
             telemetry.addData("State","2");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
             state = 3;
         }
-        //moving forward several inches
+        //moving forward several inches into storage unit
         if (state == 3) {
             telemetry.addData("State", "3");
             telemetry.update();

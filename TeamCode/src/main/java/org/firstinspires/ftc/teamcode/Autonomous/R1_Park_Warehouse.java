@@ -98,14 +98,14 @@ public class R1_Park_Warehouse extends LinearOpMode {
             //facing Forward strafe left one foot.
             state = 2;
         }
-        //turning right
+        //turning right so robot's front faces back wall of warehouse
         if (state == 2) {
             telemetry.addData("State","2");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
             state = 3;
         }
-        //moving forward several inches
+        //moving forward several inches so robot drives into warehouse
         if (state == 3) {
             telemetry.addData("State", "3");
             telemetry.update();

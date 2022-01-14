@@ -88,7 +88,7 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
             waitForStart();
             state = 1;
         }
-        //lifting attachment
+        //move lift up so that it reaches first level of shipping hub prior to moving
         if (state == 1) {
             telemetry.addData("State", "2");
             telemetry.update();
@@ -102,21 +102,21 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
             robot.lift.setPower(0);
             state = 3;
         }
-        //moving forward several inches
+        //move forward several inches to duck placement line
         if (state == 3) {
             telemetry.addData("State", "2");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 10, 10, 10, 10, 4.0);
             state = 4;
-            //turn right
         }
+        //turn right so intake system faces shipping hub
         if (state == 4) {
             telemetry.addData("State", "2");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
             state = 5;
         }
-        //move forward to shipping hub
+        //move forward so intake system is right against shipping hub
         if (state == 5) {
             telemetry.addData("State", "3");
             telemetry.update();
@@ -138,21 +138,21 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
             robot.rightIntake.setPower(0);
             state = 8;
         }
-        //back up
+        //back up so robot has room to turn left
         if (state == 8) {
             telemetry.addData("State", "6");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, -8, -8, -8, -8, 4.0);
             state = 9;
         }
-        //turn left
+        //turn left so back of robot faces R2 spot
         if (state == 9) {
             telemetry.addData("State", "7");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
             state = 10;
         }
-        //back up
+        //back up so back of robot almost hits wall
         if (state == 10) {
             telemetry.addData("State", "8");
             telemetry.update();

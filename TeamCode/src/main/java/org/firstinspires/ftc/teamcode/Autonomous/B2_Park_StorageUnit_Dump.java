@@ -89,7 +89,7 @@ public class B2_Park_StorageUnit_Dump extends LinearOpMode {
             state = 1;
         }
 
-        //moving forward several inches
+        //move forward several inches to the duck placement line
         if (state == 1){
             telemetry.addData("State","1");
             telemetry.update();
@@ -97,14 +97,14 @@ public class B2_Park_StorageUnit_Dump extends LinearOpMode {
             //facing Forward strafe left one foot.
             state = 2;
         }
-        //turning right
+        //turning right so the intake system is facing the wall of storage unit
         if (state == 2) {
             telemetry.addData("State","2");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
             state = 3;
         }
-        //moving forward several inches
+        //move forward several inches so the front of robot almost touches wall of storage unit
         if (state == 3) {
             telemetry.addData("State", "3");
             telemetry.update();
@@ -121,7 +121,7 @@ public class B2_Park_StorageUnit_Dump extends LinearOpMode {
             robot.rightBack.setPower(0);
             state = 5;
         }
-        //deposit freight in shipping hub
+        //deposit freight in storage unit
         if(state == 5){
             telemetry.addData("State", "5");
             telemetry.update();
@@ -231,6 +231,12 @@ public class B2_Park_StorageUnit_Dump extends LinearOpMode {
                 (runtime.seconds() < freightTime)){
             robot.leftIntake.setPower(freightSpeed);
             robot.rightIntake.setPower(freightSpeed);
+        }
+    }
+    public void liftUp(double liftTime, double liftSpeed) {
+        while (opModeIsActive() &&
+                (runtime.seconds() < liftTime)) {
+            robot.lift.setPower(liftSpeed);
         }
     }
 }

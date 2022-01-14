@@ -37,7 +37,7 @@ import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_CompetitionBot;
 
 @Autonomous(name="R1 Park Warehouse ShippingHub", group="Red")
 //@Disabled
-public class R1_Park_Warehouse_ShippingHub extends LinearOpMode {
+public class R1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMap_CompetitionBot robot   = new HardwareMap_CompetitionBot();   // Use a Pushbot's hardware
@@ -89,14 +89,14 @@ public class R1_Park_Warehouse_ShippingHub extends LinearOpMode {
             state = 1;
         }
 
-        //move forward
+        //move forward to duck placement line
         if (state == 1){
             telemetry.addData("State","1");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 4, 4, 4, 4, 4.0);
             state = 2;
         }
-        //turn left
+        //turn left so intake system is facing shipping hub
         if (state == 2) {
             telemetry.addData("State","2");
             telemetry.update();
@@ -110,21 +110,21 @@ public class R1_Park_Warehouse_ShippingHub extends LinearOpMode {
             encoderDrive(DRIVE_SPEED, 5, 5, 5, 5, 4.0);
             state = 4;
         }
-        //turn right
+        //turn right so intake system is facing shipping hub
         if (state == 4) {
             telemetry.addData("State","4");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
             state = 5;
         }
-        //move forward
+        //move forward so intake system is right up against shipping hub
         if (state == 5) {
             telemetry.addData("State", "5");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 2, 2, 2, 2, 4.0);
             state = 6;
         }
-        //deposit
+        // deposit
         if(state == 6){
             telemetry.addData("State", "6");
             telemetry.update();
@@ -139,21 +139,21 @@ public class R1_Park_Warehouse_ShippingHub extends LinearOpMode {
             robot.rightIntake.setPower(0);
             state = 8;
         }
-        //back up
+        //back up so robot can turn right and be in line to enter warehouse
         if (state == 8) {
             telemetry.addData("State", "8");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, -1, -1, -1, -1, 4.0);
             state = 9;
         }
-        //turn right
+        //turn right so front of robot faces warehouse
         if (state == 9) {
             telemetry.addData("State","9");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
             state = 10;
         }
-        //move forward
+        //move forward into warehouse
         if (state == 10) {
             telemetry.addData("State", "10");
             telemetry.update();

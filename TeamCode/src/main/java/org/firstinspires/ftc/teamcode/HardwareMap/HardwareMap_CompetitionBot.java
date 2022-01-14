@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -36,9 +37,14 @@ public class HardwareMap_CompetitionBot
 
     public DcMotor  leftIntake   = null;
     public DcMotor  rightIntake  = null;
-
+    public DigitalChannel redLED;
+    public DigitalChannel greenLED;
     public DcMotor  lift  = null;
    public DcMotor duckMotor = null;
+
+   //encoder value for levels 1 and 2 of shipping hub
+   public int level1 = 1805;
+   public int level2 = 4752;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -94,7 +100,7 @@ public class HardwareMap_CompetitionBot
         rightIntake.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         duckMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
 
-        lift.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        lift.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
         // Set all motors to zero power
         leftIntake.setPower(0);
@@ -110,6 +116,13 @@ public class HardwareMap_CompetitionBot
         duckMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        redLED = hwMap.get(DigitalChannel.class, "red");
+        greenLED = hwMap.get(DigitalChannel.class, "green");
+
+        // change LED mode from input to output
+        redLED.setMode(DigitalChannel.Mode.OUTPUT);
+        greenLED.setMode(DigitalChannel.Mode.OUTPUT);
     }
 
 }

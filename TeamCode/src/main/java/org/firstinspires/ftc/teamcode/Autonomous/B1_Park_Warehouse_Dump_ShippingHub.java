@@ -37,7 +37,7 @@ import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_CompetitionBot;
 
 @Autonomous(name="B1 Park Warehouse ShippingHub", group="Blue")
 //@Disabled
-public class B1_Park_Warehouse_ShippingHub extends LinearOpMode {
+public class B1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMap_CompetitionBot robot   = new HardwareMap_CompetitionBot();   // Use a Pushbot's hardware
@@ -88,43 +88,49 @@ public class B1_Park_Warehouse_ShippingHub extends LinearOpMode {
             waitForStart();
             state = 1;
         }
+        //raise lift to level 1 prior to moving
+        if (state == 1){
+            telemetry.addData("State","1");
+            telemetry.update();
 
-        //move forward
+            state = 2;
+        }
+        //move forward to shipping hub
         if (state == 1){
             telemetry.addData("State","1");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 4, 4, 4, 4, 4.0);
             state = 2;
         }
-        //turn right
+        //turn right so that intake system faces shipping hub
         if (state == 2) {
             telemetry.addData("State","2");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
             state = 3;
         }
-        //move forward
+        //move forward so that robot is right in front of shipping hub
         if (state == 3) {
             telemetry.addData("State", "3");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 5, 5, 5, 5, 4.0);
             state = 4;
         }
-        //turn left
+        //turn left so that the intake system is facing shipping hub
         if (state == 4) {
             telemetry.addData("State","4");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
             state = 5;
         }
-        //move forward
+        //move forward so that intake system is right up against shipping hub
         if (state == 5) {
             telemetry.addData("State", "5");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 2, 2, 2, 2, 4.0);
             state = 6;
         }
-        //deposit
+        //deposit freight into bottom level of shipping hub
         if(state == 6){
             telemetry.addData("State", "6");
             telemetry.update();
@@ -139,21 +145,21 @@ public class B1_Park_Warehouse_ShippingHub extends LinearOpMode {
             robot.rightIntake.setPower(0);
             state = 8;
         }
-        //back up
+        //back up so that robot has room to turn towards warehouse
         if (state == 8) {
             telemetry.addData("State", "8");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, -1, -1, -1, -1, 4.0);
             state = 9;
         }
-        //turn left
+        //turn left so the robot's front is pointed towards warehouse
         if (state == 9) {
             telemetry.addData("State","9");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
             state = 10;
         }
-        //move forward
+        //move forward straight into the warehouse
         if (state == 10) {
             telemetry.addData("State", "10");
             telemetry.update();
@@ -170,11 +176,6 @@ public class B1_Park_Warehouse_ShippingHub extends LinearOpMode {
             robot.rightBack.setPower(0);
             state = 12;
         }
-        //stop all motion
-      // encoderDrive(  // S3: Reverse 24 Inches with 4 Sec timeout
-
-        // robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
-        // robot.rightClaw.setPosition(0.0);
         sleep(1000);     // pause for servos to move
 
         telemetry.addData("Path", "Complete");

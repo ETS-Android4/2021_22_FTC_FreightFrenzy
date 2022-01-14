@@ -88,13 +88,13 @@ public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
             waitForStart();
             state = 1;
         }
-        //moving forward several inches
+        //move forward several inches up to duck placement line
         if (state == 1){
             telemetry.addData("State","1");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 10, 10,10, 10, 4.0);
             state = 2;
-        //turn left
+        //turn left so intake system is facing shipping hub
         }
         if (state == 2){
             telemetry.addData("State","2");
@@ -102,14 +102,14 @@ public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
             encoderDrive(DRIVE_SPEED, -5, 5,-5, -5, 4.0);
             state = 3;
         }
-        //move forward to shipping hub
+        //move forward so robot is directly in front of shipping hub
         if (state == 3) {
             telemetry.addData("State", "3");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 1.5, 1.5, 1.5, 1.5, 4.0);
             state = 4;
         }
-        //deposit freight
+        //deposit freight in shipping hub
         if(state == 4){
             telemetry.addData("State", "4");
             telemetry.update();
@@ -124,35 +124,35 @@ public class B2_Park_StorageUnit_Dump_ShippingHub extends LinearOpMode {
             robot.rightIntake.setPower(0);
             state = 6;
         }
-        //back up
+        //back up so the robot has room to turn right
         if (state == 6){
             telemetry.addData("State","6");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, -1, -1,-1, -1, 4.0);
             state = 7;
         }
-        //turn right
+        //turn right so the robot is facing the R2 space
         if (state == 7) {
             telemetry.addData("State", "7");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
             state = 8;
         }
-        //back up
+        //back up so the robot is positioned with its side in front of the storage unit
         if (state == 8){
             telemetry.addData("State","8");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, -3.0, -3.0,-3.0, -3.0, 4.0);
             state = 9;
         }
-        //turn left
+        //turn left so robot's back is in line with storage unit
         if (state == 9) {
             telemetry.addData("State", "9");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
             state = 10;
         }
-        //back up
+        //back up until the back of the robot hits the wall
         if (state == 10){
             telemetry.addData("State","10");
             telemetry.update();
