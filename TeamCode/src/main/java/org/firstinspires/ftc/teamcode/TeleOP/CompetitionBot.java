@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TeleOP;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_CompetitionBot;
 
@@ -19,7 +20,7 @@ public class CompetitionBot extends OpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-
+        robot.lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello WAGS Driver!!");    //
 

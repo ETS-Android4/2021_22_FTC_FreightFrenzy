@@ -92,8 +92,9 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
         if (state == 1) {
             telemetry.addData("State", "2");
             telemetry.update();
-            liftUp(2, -1);
-            state = 2;
+           //liftUp(2, -1);
+            setLiftPosition(robot.level2, 1);
+            state = 14;
         }
         //stop lift
         if (state == 2) {
@@ -185,10 +186,7 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
         if (state == 14) {
             telemetry.addData("State", "18");
             telemetry.update();
-            robot.leftFront.setPower(0);
-            robot.rightFront.setPower(0);
-            robot.leftBack.setPower(0);
-            robot.rightBack.setPower(0);
+            stopMotors();
             state = 15;
         }
         //
@@ -305,5 +303,25 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
                 (runtime.seconds() < liftTime)) {
             robot.lift.setPower(liftSpeed);
         }
+    }
+    public void setLiftPosition(int position, double speed) {
+        robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lift.setTargetPosition(position);
+        robot.lift.setPower(speed);
+
+        while((robot.lift.getCurrentPosition() > robot.lift.getTargetPosition() + 1
+                || robot.lift.getCurrentPosition() < robot.lift.getTargetPosition() - 1)
+                && opModeIsActive()) {
+            telemetry.addData("Encoder Position",robot.lift.getCurrentPosition());
+            telemetry.update();
+            idle();
+        }
+        robot.lift.setPower(0);
+    }
+    public void stopMotors() {
+        robot.leftFront.setPower(0);
+        robot.leftBack.setPower(0);
+        robot.rightFront.setPower(0);
+        robot.rightBack.setPower(0);
     }
 }

@@ -6,6 +6,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_CompetitionBot;
 import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_Holonomic;
 
 
@@ -41,7 +46,7 @@ import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_Holonomic;
 public class R1_Park_Warehouse extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwareMap_Holonomic robot   = new HardwareMap_Holonomic();   // Use a Pushbot's hardware
+    HardwareMap_CompetitionBot robot   = new HardwareMap_CompetitionBot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -102,9 +107,11 @@ public class R1_Park_Warehouse extends LinearOpMode {
         if (state == 2) {
             telemetry.addData("State","2");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
-            state = 3;
+            //encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
+            gyroTurn(DRIVE_SPEED, 90);
+            state = 4;
         }
+
         //moving forward several inches so robot drives into warehouse
         if (state == 3) {
             telemetry.addData("State", "3");
@@ -117,10 +124,7 @@ public class R1_Park_Warehouse extends LinearOpMode {
         if(state == 4){
             telemetry.addData("State", "4");
             telemetry.update();
-            robot.leftFront.setPower(0);
-            robot.rightFront.setPower(0);
-            robot.leftBack.setPower(0);
-            robot.rightBack.setPower(0);
+            stopMotors();
 
             //Move forward six feet.
             state = 5;
@@ -215,5 +219,60 @@ public class R1_Park_Warehouse extends LinearOpMode {
 
             //  sleep(250);   // optional pause after each move
         }
+    }
+    public void gyroTurn(double power, double target) {
+        Orientation angles;
+        double error;
+        double k = 6 / 360.0;
+        double kInt = 3 / 3600.0;
+        double eInt = 0;
+        double prevTime = System.currentTimeMillis();
+        double globalAngle = 0;
+        double lastAngle = 0;
+        double deltaAngle = 0;
+        while (opModeIsActive()) {
+            double currentTime = System.currentTimeMillis();
+            double loopTime = (currentTime - prevTime) / 1000.0; // In seconds
+            prevTime = currentTime;
+            angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            //finds the angle given by the imu [-180, 180]
+            double angle = angles.firstAngle;
+            deltaAngle = angle - lastAngle;
+
+            //adjusts the change in angle (deltaAngle) to be the actual change in angle
+            if (deltaAngle < -180) {
+                deltaAngle += 360;
+            } else if (deltaAngle > 180) {
+                deltaAngle -= 360;
+            }
+            globalAngle += deltaAngle;
+            lastAngle = angle;
+
+            error = target - globalAngle;
+            eInt += loopTime * error;
+            telemetry.addData("Heading", angles.firstAngle + " degrees");
+            telemetry.addData("GlobalAngle", globalAngle + " degrees");
+            telemetry.addData("Error", error + " degrees");
+            telemetry.addData("Loop time: ", loopTime + " ms");
+            telemetry.update();
+            if (error == 0) {
+                stopMotors();
+                break;
+            }
+            turnLeft(k * error + kInt * eInt);
+            idle();
+        }
+    }
+    public void stopMotors() {
+        robot.leftFront.setPower(0);
+        robot.leftBack.setPower(0);
+        robot.rightFront.setPower(0);
+        robot.rightBack.setPower(0);
+    }
+    public void turnLeft(double power) {
+        robot.leftFront.setPower(-power);
+        robot.rightFront.setPower(power);
+        robot.leftBack.setPower(-power);
+        robot.rightBack.setPower(power);
     }
 }

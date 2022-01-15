@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
+import com.qualcomm.hardware.bosch.BNO055IMU;
 /**
  * This is NOT an opmode.
  *
@@ -40,11 +40,12 @@ public class HardwareMap_CompetitionBot
     public DigitalChannel redLED;
     public DigitalChannel greenLED;
     public DcMotor  lift  = null;
-   public DcMotor duckMotor = null;
+    public DcMotor duckMotor = null;
+    public BNO055IMU imu;
 
    //encoder value for levels 1 and 2 of shipping hub
    public int level1 = 1805;
-   public int level2 = 4752;
+   public int level2 = 4461;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -99,7 +100,17 @@ public class HardwareMap_CompetitionBot
         leftIntake.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightIntake.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         duckMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        //IMU
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled = false;
+        //get and initialize IMU
+        imu = hwMap.get(BNO055IMU.class, "imu");
 
+        imu.initialize(parameters);
+        //end IMU
         lift.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
         // Set all motors to zero power
@@ -114,7 +125,7 @@ public class HardwareMap_CompetitionBot
         leftIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         duckMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         redLED = hwMap.get(DigitalChannel.class, "red");
