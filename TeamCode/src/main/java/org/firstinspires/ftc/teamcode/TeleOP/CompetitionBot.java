@@ -145,22 +145,32 @@ public class CompetitionBot extends OpMode {
         //gamepad
         if (isButtonDU2) {
             robot.duckMotor.setPower(speedDuck);
+            robot.greenLED.setState(true);
+            robot.redLED.setState(false);
             telemetry.addData("Button","DU");
             //A is retract
         } else if (isButtonDD2) {
             robot.duckMotor.setPower(-speedDuck);
+            robot.greenLED.setState(true);
+            robot.redLED.setState(false);
             telemetry.addData("Button","DD");
             //B is extend
         } else if (isButtonDR2) {
             robot.duckMotor.setPower(1);
+            robot.greenLED.setState(true);
+            robot.redLED.setState(false);
             telemetry.addData("Button","DR");
             //X is retract, but with full power
 
         }  else if (isButtonDL2) {
             robot.duckMotor.setPower(-1);
+            robot.greenLED.setState(true);
+            robot.redLED.setState(false);
             telemetry.addData("Button","DL");
             //X is retract, but with full power
         }else {
+            robot.greenLED.setState(false);
+            robot.redLED.setState(true);
             telemetry.addData("Button","None");
             robot.duckMotor.setPower(0);
         }
@@ -169,22 +179,32 @@ public class CompetitionBot extends OpMode {
         //gamepad
         if (isButtonDU1) {
             robot.duckMotor.setPower(speedDuck);
+            robot.greenLED.setState(true);
+            robot.redLED.setState(false);
             telemetry.addData("Button","DU");
             //A is retract
         } else if (isButtonDD1) {
             robot.duckMotor.setPower(-speedDuck);
+            robot.greenLED.setState(true);
+            robot.redLED.setState(false);
             telemetry.addData("Button","DD");
             //B is extend
         } else if (isButtonDR1) {
             robot.duckMotor.setPower(1);
+            robot.greenLED.setState(true);
+            robot.redLED.setState(false);
             telemetry.addData("Button","DR");
             //X is retract, but with full power
 
         }  else if (isButtonDL1) {
             robot.duckMotor.setPower(-1);
+            robot.greenLED.setState(true);
+            robot.redLED.setState(false);
             telemetry.addData("Button","DL");
             //X is retract, but with full power
         }else {
+            robot.greenLED.setState(false);
+            robot.redLED.setState(true);
             telemetry.addData("Button","None");
             robot.duckMotor.setPower(0);
         }
