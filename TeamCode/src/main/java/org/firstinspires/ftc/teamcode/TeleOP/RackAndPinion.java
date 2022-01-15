@@ -96,17 +96,13 @@ public class RackAndPinion extends OpMode {
         double speed = 0.5;
 
         if (isButtonRB) {
-            robot.lift.setPower(speed);
+            robot.lift.setPower(1);
             telemetry.addData("Button","RB");
             //A is retract
         } else if (isButtonLB) {
-            robot.lift.setPower(-speed);
+            robot.lift.setPower(-1);
             telemetry.addData("Button","LB");
             //A is retract
-        } else if (isButtonLB) {
-            robot.lift.setPower(-speed);
-            telemetry.addData("Button","B");
-            //B is extend
         }else {
             telemetry.addData("Button","None");
             robot.lift.setPower(0);
@@ -115,18 +111,18 @@ public class RackAndPinion extends OpMode {
 
 
         if (isButtonA) {
-            robot.leftIntake.setPower(speed);
-            robot.rightIntake.setPower(speed);
+            robot.leftIntake.setPower(1);
+            robot.rightIntake.setPower(1);
             telemetry.addData("Button","A");
             //A is retract
         } else if (isButtonB) {
-            robot.leftIntake.setPower(-speed);
-            robot.rightIntake.setPower(-speed);
+            robot.leftIntake.setPower(1);
+            robot.rightIntake.setPower(1);
             telemetry.addData("Button","B");
             //B is extend
         } else if (isButtonX) {
-            robot.leftIntake.setPower(1);
-            robot.rightIntake.setPower(1);
+            robot.leftIntake.setPower(-1);
+            robot.rightIntake.setPower(-1);
             telemetry.addData("Button","X");
             //X is retract, but with full power
 

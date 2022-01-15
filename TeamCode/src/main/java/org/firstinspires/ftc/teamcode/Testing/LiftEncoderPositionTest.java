@@ -55,15 +55,15 @@ public class LiftEncoderPositionTest extends OpMode{
         final int level2 = 4752;
 
         if (isButtonA) {
-            liftUpPosition(level1, 3);
+            liftUpPosition(level1, 0.3);
             telemetry.addData("Button","A");
             //A is retract
         } else if (isButtonB) {
-            liftUpPosition(level2, 3);
+            liftUpPosition(level2, 0.3);
             telemetry.addData("Button","B");
             //B is extend
         } else if (isButtonX) {
-            liftUpPosition(down, 3);
+            liftUpPosition(down, 0.3);
             telemetry.addData("Button", "B");
             //B is extend
         }else {
