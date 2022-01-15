@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_CompetitionBot;
 
 // name this OpMode and determine a group
-@TeleOp (name="RackAndPinion", group="TeleOP")
-public class RackAndPinion extends OpMode {
+@TeleOp (name="CompetitionBot", group="TeleOP")
+public class CompetitionBot extends OpMode {
 
     /* Declare OpMode members. */
     HardwareMap_CompetitionBot robot       = new HardwareMap_CompetitionBot();
@@ -42,7 +42,7 @@ public class RackAndPinion extends OpMode {
     @Override
     public void loop() {
 
-
+        double speedDuck = 0.5;
         double rStickX;
         double rStickY;
         double lStickX;
@@ -53,6 +53,7 @@ public class RackAndPinion extends OpMode {
         double maxPower;
         double scaleDown;
 
+        //gamepad 1 driving
         rStickX = gamepad1.right_stick_x;
         rStickY = -gamepad1.right_stick_y;
         lStickX = gamepad1.left_stick_x;
@@ -75,31 +76,32 @@ public class RackAndPinion extends OpMode {
         robot.leftBack.setPower((mag1 - rotationPower) * scaleDown);
         robot.rightBack.setPower((mag2 + rotationPower) * scaleDown);
 
-        boolean isButtonB = gamepad2.b;
-        boolean isButtonA = gamepad2.a;
-        boolean isButtonX = gamepad2.x;
-        boolean isButtonY = gamepad2.y;
+        //end of gamepad driving 1
+        boolean isButtonB2 = gamepad2.b;
+        boolean isButtonA2 = gamepad2.a;
+        boolean isButtonX2 = gamepad2.x;
+        boolean isButtonY2 = gamepad2.y;
 
-        boolean isButtonLB = gamepad2.left_bumper;
-        boolean isButtonRB = gamepad2.right_bumper;
+        boolean isButtonLB2 = gamepad2.left_bumper;
+        boolean isButtonRB2 = gamepad2.right_bumper;
 
-        boolean isButtonDU = gamepad2.dpad_up;
-        boolean isButtonDR = gamepad2.dpad_right;
-        boolean isButtonDL = gamepad2.dpad_left;
-        boolean isButtonDD = gamepad2.dpad_down;
+        boolean isButtonDU2 = gamepad2.dpad_up;
+        boolean isButtonDR2 = gamepad2.dpad_right;
+        boolean isButtonDL2 = gamepad2.dpad_left;
+        boolean isButtonDD2 = gamepad2.dpad_down;
 
-        boolean isBDU = gamepad1.dpad_up;
-        boolean isBDR = gamepad1.dpad_right;
-        boolean isBDL = gamepad1.dpad_left;
-        boolean isBDD = gamepad1.dpad_down;
+        boolean isButtonDU1 = gamepad1.dpad_up;
+        boolean isButtonDR1 = gamepad1.dpad_right;
+        boolean isButtonDL1 = gamepad1.dpad_left;
+        boolean isButtonDD1 = gamepad1.dpad_down;
 
-        double speed = 0.5;
-
-        if (isButtonRB) {
+        //programming buttons for gamepad 2 bumpers
+        //lift right bumper and left bumper
+        if (isButtonRB2) {
             robot.lift.setPower(1);
             telemetry.addData("Button","RB");
             //A is retract
-        } else if (isButtonLB) {
+        } else if (isButtonLB2) {
             robot.lift.setPower(-1);
             telemetry.addData("Button","LB");
             //A is retract
@@ -109,48 +111,52 @@ public class RackAndPinion extends OpMode {
         }
 
 
-
-        if (isButtonA) {
+        //programming buttons for gamepad 2
+        //X, Y, A, B
+        //intake and retract
+        if (isButtonA2) {
             robot.leftIntake.setPower(1);
             robot.rightIntake.setPower(1);
-            telemetry.addData("Button","A");
+            telemetry.addData("Button","A2");
             //A is retract
-        } else if (isButtonB) {
+        } else if (isButtonB2) {
             robot.leftIntake.setPower(1);
             robot.rightIntake.setPower(1);
-            telemetry.addData("Button","B");
+            telemetry.addData("Button","B2");
             //B is extend
-        } else if (isButtonX) {
+        } else if (isButtonX2) {
             robot.leftIntake.setPower(-1);
             robot.rightIntake.setPower(-1);
-            telemetry.addData("Button","X");
+            telemetry.addData("Button","X2");
             //X is retract, but with full power
 
-        }  else if (isButtonY) {
+        }  else if (isButtonY2) {
             robot.leftIntake.setPower(-1);
             robot.rightIntake.setPower(-1);
-            telemetry.addData("Button","X");
+            telemetry.addData("Button","Y2");
             //X is retract, but with full power
         }else {
             telemetry.addData("Button","None");
             robot.leftIntake.setPower(0);
             robot.rightIntake.setPower(0);
         }
-
-        if (isButtonDU) {
-            robot.duckMotor.setPower(speed);
+        //programming buttons for gamepad 2
+        //duckwheel
+        //gamepad
+        if (isButtonDU2) {
+            robot.duckMotor.setPower(speedDuck);
             telemetry.addData("Button","DU");
             //A is retract
-        } else if (isButtonDD) {
-            robot.duckMotor.setPower(-speed);
+        } else if (isButtonDD2) {
+            robot.duckMotor.setPower(-speedDuck);
             telemetry.addData("Button","DD");
             //B is extend
-        } else if (isButtonDR) {
+        } else if (isButtonDR2) {
             robot.duckMotor.setPower(1);
             telemetry.addData("Button","DR");
             //X is retract, but with full power
 
-        }  else if (isButtonDL) {
+        }  else if (isButtonDL2) {
             robot.duckMotor.setPower(-1);
             telemetry.addData("Button","DL");
             //X is retract, but with full power
@@ -158,21 +164,23 @@ public class RackAndPinion extends OpMode {
             telemetry.addData("Button","None");
             robot.duckMotor.setPower(0);
         }
-
-        if (isBDU) {
-            robot.duckMotor.setPower(speed);
+        //programming buttons for gamepad 1
+        //duck wheel
+        //gamepad
+        if (isButtonDU1) {
+            robot.duckMotor.setPower(speedDuck);
             telemetry.addData("Button","DU");
             //A is retract
-        } else if (isBDD) {
-            robot.duckMotor.setPower(-speed);
+        } else if (isButtonDD1) {
+            robot.duckMotor.setPower(-speedDuck);
             telemetry.addData("Button","DD");
             //B is extend
-        } else if (isBDR) {
+        } else if (isButtonDR1) {
             robot.duckMotor.setPower(1);
             telemetry.addData("Button","DR");
             //X is retract, but with full power
 
-        }  else if (isBDL) {
+        }  else if (isButtonDL1) {
             robot.duckMotor.setPower(-1);
             telemetry.addData("Button","DL");
             //X is retract, but with full power
