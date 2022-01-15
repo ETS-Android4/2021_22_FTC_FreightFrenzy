@@ -220,6 +220,40 @@ public class R1_Park_Warehouse extends LinearOpMode {
             //  sleep(250);   // optional pause after each move
         }
     }
+    /*
+        METHODS FOR ALL AUTONOMOUS
+      */
+    public void retractFreight(double freightTime, double freightSpeed) {
+        while (opModeIsActive() &&
+                (runtime.seconds() < freightTime)) {
+            robot.leftIntake.setPower(freightSpeed);
+            robot.rightIntake.setPower(freightSpeed);
+        }
+    }
+    public void spinWheel(double wheelTime, double wheelSpeed) {
+        while (opModeIsActive() &&
+                (runtime.seconds() < wheelTime)) {
+            robot.duckMotor.setPower(wheelSpeed);
+        }
+    }
+
+    public void setLiftPosition(int position, double speed) {
+        robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lift.setTargetPosition(position);
+        robot.lift.setPower(speed);
+
+        while((robot.lift.getCurrentPosition() > robot.lift.getTargetPosition() + 1
+                || robot.lift.getCurrentPosition() < robot.lift.getTargetPosition() - 1)
+                && opModeIsActive()) {
+            telemetry.addData("Encoder Position",robot.lift.getCurrentPosition());
+            telemetry.update();
+            idle();
+        }
+        robot.lift.setPower(0);
+    }
+
+
+
     public void gyroTurn(double power, double target) {
         Orientation angles;
         double error;
@@ -275,4 +309,6 @@ public class R1_Park_Warehouse extends LinearOpMode {
         robot.leftBack.setPower(-power);
         robot.rightBack.setPower(power);
     }
+
+
 }

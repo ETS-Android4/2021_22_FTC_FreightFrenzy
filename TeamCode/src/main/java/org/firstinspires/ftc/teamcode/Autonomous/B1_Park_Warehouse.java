@@ -6,6 +6,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_CompetitionBot;
 import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_Holonomic;
 
 
@@ -41,7 +46,7 @@ import org.firstinspires.ftc.teamcode.HardwareMap.HardwareMap_Holonomic;
 public class B1_Park_Warehouse extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwareMap_Holonomic robot   = new HardwareMap_Holonomic();   // Use a Pushbot's hardware
+    HardwareMap_CompetitionBot robot   = new HardwareMap_CompetitionBot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -215,6 +220,96 @@ public class B1_Park_Warehouse extends LinearOpMode {
 
             //  sleep(250);   // optional pause after each move
         }
+    }
+
+    /*
+    METHODS FOR ALL AUTONOMOUS
+  */
+    public void retractFreight(double freightTime, double freightSpeed) {
+        while (opModeIsActive() &&
+                (runtime.seconds() < freightTime)) {
+            robot.leftIntake.setPower(freightSpeed);
+            robot.rightIntake.setPower(freightSpeed);
+        }
+    }
+    public void spinWheel(double wheelTime, double wheelSpeed) {
+        while (opModeIsActive() &&
+                (runtime.seconds() < wheelTime)) {
+            robot.duckMotor.setPower(wheelSpeed);
+        }
+    }
+
+    public void setLiftPosition(int position, double speed) {
+        robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lift.setTargetPosition(position);
+        robot.lift.setPower(speed);
+
+        while((robot.lift.getCurrentPosition() > robot.lift.getTargetPosition() + 1
+                || robot.lift.getCurrentPosition() < robot.lift.getTargetPosition() - 1)
+                && opModeIsActive()) {
+            telemetry.addData("Encoder Position",robot.lift.getCurrentPosition());
+            telemetry.update();
+            idle();
+        }
+        robot.lift.setPower(0);
+    }
+
+
+
+    public void gyroTurn(double power, double target) {
+        Orientation angles;
+        double error;
+        double k = 6 / 360.0;
+        double kInt = 3 / 3600.0;
+        double eInt = 0;
+        double prevTime = System.currentTimeMillis();
+        double globalAngle = 0;
+        double lastAngle = 0;
+        double deltaAngle = 0;
+        while (opModeIsActive()) {
+            double currentTime = System.currentTimeMillis();
+            double loopTime = (currentTime - prevTime) / 1000.0; // In seconds
+            prevTime = currentTime;
+            angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            //finds the angle given by the imu [-180, 180]
+            double angle = angles.firstAngle;
+            deltaAngle = angle - lastAngle;
+
+            //adjusts the change in angle (deltaAngle) to be the actual change in angle
+            if (deltaAngle < -180) {
+                deltaAngle += 360;
+            } else if (deltaAngle > 180) {
+                deltaAngle -= 360;
+            }
+            globalAngle += deltaAngle;
+            lastAngle = angle;
+
+            error = target - globalAngle;
+            eInt += loopTime * error;
+            telemetry.addData("Heading", angles.firstAngle + " degrees");
+            telemetry.addData("GlobalAngle", globalAngle + " degrees");
+            telemetry.addData("Error", error + " degrees");
+            telemetry.addData("Loop time: ", loopTime + " ms");
+            telemetry.update();
+            if (error == 0) {
+                stopMotors();
+                break;
+            }
+            turnLeft(k * error + kInt * eInt);
+            idle();
+        }
+    }
+    public void stopMotors() {
+        robot.leftFront.setPower(0);
+        robot.leftBack.setPower(0);
+        robot.rightFront.setPower(0);
+        robot.rightBack.setPower(0);
+    }
+    public void turnLeft(double power) {
+        robot.leftFront.setPower(-power);
+        robot.rightFront.setPower(power);
+        robot.leftBack.setPower(-power);
+        robot.rightBack.setPower(power);
     }
 }
 
