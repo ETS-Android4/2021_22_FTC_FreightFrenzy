@@ -48,10 +48,12 @@ public class HardwareMap_CompetitionBot
     public DcMotor  lift  = null;
     public DcMotor duckMotor = null;
     public BNO055IMU imu;
+    public final double THRESHOLD = 3;
 
    //encoder value for levels 1 and 2 of shipping hub
    public int level1 = 1805;
    public int level2 = 4461;
+   public int down = 0;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -90,11 +92,11 @@ public class HardwareMap_CompetitionBot
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        duckMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        duckMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Define and Initialize Motors
         leftIntake  = hwMap.get(DcMotor.class, "leftIntake");

@@ -46,6 +46,7 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
     /* Declare OpMode members. */
     HardwareMap_CompetitionBot robot = new HardwareMap_CompetitionBot();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
+    private ElapsedTime runtimeDuck = new ElapsedTime();
 
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
@@ -98,7 +99,7 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
             telemetry.update();
            //liftUp(2, -1);
             setLiftPosition(robot.level2, 1);
-            state = 14;
+            state = 2;
         }
         //stop lift
         if (state == 2) {
@@ -118,7 +119,8 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
         if (state == 4) {
             telemetry.addData("State", "2");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
+            gyroTurn(DRIVE_SPEED, -90);
+            //encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
             state = 5;
         }
         //move forward so intake system is right against shipping hub
@@ -132,7 +134,7 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
         if (state == 6) {
             telemetry.addData("State", "4");
             telemetry.update();
-            retractFreight(3, 1);
+            retractFreight(3, -1);
             state = 7;
         }
         //stop intake motors
@@ -147,23 +149,39 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
         if (state == 8) {
             telemetry.addData("State", "6");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -8, -8, -8, -8, 4.0);
+            encoderDrive(DRIVE_SPEED, -9, -9, -9, -9, 4.0);
             state = 9;
         }
-        //turn left so back of robot faces R2 spot
+        //bring lift down
         if (state == 9) {
-            telemetry.addData("State", "7");
+            telemetry.addData("State", "2");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
+            //liftUp(2, -1);
+            setLiftPosition(robot.down, 1);
             state = 10;
         }
-        //back up so back of robot almost hits wall
+        //turn left so back of robot faces R2 spot
         if (state == 10) {
-            telemetry.addData("State", "8");
+            telemetry.addData("State", "7");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -9, -9, -9, -9, 4.0);
+            //gyroTurn(DRIVE_SPEED, 90);
+            //encoderDrive(DRIVE_SPEED, -5, 5, 5, -5, 4.0);
+            strafeLeft(0.3, 9);
             state = 11;
         }
+        //back up so back of robot almost hits wall
+        //if (state == 11) {
+            //telemetry.addData("State", "8");
+            //telemetry.update();
+            //encoderDrive(DRIVE_SPEED, -9, -9, -9, -9, 4.0);
+            //state = 12;
+        //}
+        //if (state == 12) {
+            //telemetry.addData("State", "8");
+            //telemetry.update();
+            //encoderDrive(DRIVE_SPEED, -9, 9, 9, -9, 4.0);
+            //state = 15;
+        //}
         //spin wheel
         if (state == 11) {
             telemetry.addData("State", "11");
@@ -183,7 +201,8 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
         if (state == 13) {
             telemetry.addData("State", "13");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 5, 5, 5, 5, 4.0);
+            //encoderDrive(DRIVE_SPEED, 5, 5, 5, 5, 4.0);
+            strafeRight(DRIVE_SPEED, 5);
             state = 14;
         }
         //stop robot
@@ -300,7 +319,7 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
     }
     public void spinWheel(double wheelTime, double wheelSpeed) {
         while (opModeIsActive() &&
-                (runtime.seconds() < wheelTime)) {
+                (runtimeDuck.seconds() < wheelTime)) {
             robot.duckMotor.setPower(wheelSpeed);
         }
     }
@@ -322,19 +341,22 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
 
 
 
-    public void gyroTurn(double power, double target) {
+
+    public void gyroTurn (double power, double target)
+    {
         Orientation angles;
         double error;
-        double k = 6 / 360.0;
-        double kInt = 3 / 3600.0;
+        double k = 55/3600.0;
+        double kInt = 3/3600.0;
         double eInt = 0;
+        double startTime = System.currentTimeMillis();
         double prevTime = System.currentTimeMillis();
         double globalAngle = 0;
         double lastAngle = 0;
         double deltaAngle = 0;
-        while (opModeIsActive()) {
+        while(opModeIsActive()) {
             double currentTime = System.currentTimeMillis();
-            double loopTime = (currentTime - prevTime) / 1000.0; // In seconds
+            double loopTime = (currentTime - prevTime)/1000.0; // In seconds
             prevTime = currentTime;
             angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             //finds the angle given by the imu [-180, 180]
@@ -342,9 +364,10 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
             deltaAngle = angle - lastAngle;
 
             //adjusts the change in angle (deltaAngle) to be the actual change in angle
-            if (deltaAngle < -180) {
+            if (deltaAngle < -180){
                 deltaAngle += 360;
-            } else if (deltaAngle > 180) {
+            }
+            else if (deltaAngle > 180){
                 deltaAngle -= 360;
             }
             globalAngle += deltaAngle;
@@ -352,19 +375,22 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
 
             error = target - globalAngle;
             eInt += loopTime * error;
-            telemetry.addData("Heading", angles.firstAngle + " degrees");
-            telemetry.addData("GlobalAngle", globalAngle + " degrees");
-            telemetry.addData("Error", error + " degrees");
-            telemetry.addData("Loop time: ", loopTime + " ms");
+            if (Math.abs(error) < robot.THRESHOLD){
+                eInt = 0;
+            }
+            telemetry.addData("Heading",angles.firstAngle+" degrees");
+            telemetry.addData("Loop time: ",loopTime+" ms");
             telemetry.update();
-            if (error == 0) {
+            if (error == 0){
                 stopMotors();
                 break;
             }
             turnLeft(k * error + kInt * eInt);
             idle();
         }
+        stopMotors();
     }
+
     public void stopMotors() {
         robot.leftFront.setPower(0);
         robot.leftBack.setPower(0);
@@ -376,5 +402,72 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
         robot.rightFront.setPower(power);
         robot.leftBack.setPower(-power);
         robot.rightBack.setPower(power);
+    }
+    public void strafeLeft(double power, int distance) {
+        Orientation angles;
+        double error;
+        double k = 3/360.0;
+        double startAngle = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        int leftFrontTarget = robot.leftFront.getCurrentPosition() - (int)(distance * COUNTS_PER_INCH);
+        int rightFrontTarget = robot.rightFront.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+        int leftBackTarget = robot.leftBack.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+        int rightBackTarget = robot.rightBack.getCurrentPosition() - (int)(distance * COUNTS_PER_INCH);
+        robot.leftFront.setTargetPosition(leftFrontTarget);
+        robot.rightFront.setTargetPosition(rightFrontTarget);
+        robot.leftBack.setTargetPosition(leftBackTarget);
+        robot.rightBack.setTargetPosition(rightBackTarget);
+
+        while (opModeIsActive()
+                &&(robot.leftFront.getCurrentPosition() > leftFrontTarget && robot.rightFront.getCurrentPosition() < rightFrontTarget && robot.leftBack.getCurrentPosition() < leftBackTarget && robot.rightBack.getCurrentPosition() > rightBackTarget)) {
+            angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            //finds the angle given by the imu [-180, 180]
+            double angle = angles.firstAngle;
+            error = startAngle - angle;
+            robot.leftFront.setPower(-(power + (error * k)));
+            robot.rightFront.setPower((power + (error * k)));
+            robot.leftBack.setPower((power - (error * k)));
+            robot.rightBack.setPower(-(power - (error * k)));
+            telemetry.addData("error: ",error);
+            telemetry.addData("leftfront dest: ", leftFrontTarget);
+            telemetry.addData("leftFront pos: ",robot.leftFront.getCurrentPosition());
+
+
+            telemetry.update();
+        }
+        stopMotors();
+    }
+
+    public void strafeRight(double power, int distance) {
+        Orientation angles;
+        double error;
+        double k = 3/360.0;
+        double startAngle = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        int leftFrontTarget = robot.leftFront.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+        int rightFrontTarget = robot.rightFront.getCurrentPosition() - (int)(distance * COUNTS_PER_INCH);
+        int leftBackTarget = robot.leftBack.getCurrentPosition() - (int)(distance * COUNTS_PER_INCH);
+        int rightBackTarget = robot.rightBack.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+        robot.leftFront.setTargetPosition(leftFrontTarget);
+        robot.rightFront.setTargetPosition(rightFrontTarget);
+        robot.leftBack.setTargetPosition(leftBackTarget);
+        robot.rightBack.setTargetPosition(rightBackTarget);
+
+        while (opModeIsActive()
+                &&(robot.leftFront.getCurrentPosition() < leftFrontTarget && robot.rightFront.getCurrentPosition() > rightFrontTarget && robot.leftBack.getCurrentPosition() > leftBackTarget && robot.rightBack.getCurrentPosition() < rightBackTarget)) {
+            angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            //finds the angle given by the imu [-180, 180]
+            double angle = angles.firstAngle;
+            error = startAngle - angle;
+            robot.leftFront.setPower((power - (error * k)));
+            robot.rightFront.setPower(-(power - (error * k)));
+            robot.leftBack.setPower(-(power + (error * k)));
+            robot.rightBack.setPower((power + (error * k)));
+            telemetry.addData("error: ",error);
+            telemetry.addData("leftfront dest: ", leftFrontTarget);
+            telemetry.addData("leftFront pos: ",robot.leftFront.getCurrentPosition());
+
+
+            telemetry.update();
+        }
+        stopMotors();
     }
 }
