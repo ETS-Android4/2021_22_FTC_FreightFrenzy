@@ -92,76 +92,77 @@ public class R1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
             waitForStart();
             state = 1;
         }
-
-        //move forward to duck placement line
-        if (state == 1){
-            telemetry.addData("State","1");
+        //lift
+        if (state == 1) {
+            telemetry.addData("State", "2");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 4, 4, 4, 4, 4.0);
+            //liftUp(2, -1);
+            setLiftPosition(robot.level2, 1);
             state = 2;
         }
-        //turn left so intake system is facing shipping hub
+        //stop lift
         if (state == 2) {
-            telemetry.addData("State","2");
-            telemetry.update();
-            encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
-            state = 3;
-        }
-        //move forward
-        if (state == 3) {
             telemetry.addData("State", "3");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 5, 5, 5, 5, 4.0);
+            robot.lift.setPower(0);
+            state = 3;
+        }
+        //strafe right
+        if (state == 3){
+            telemetry.addData("State","1");
+            telemetry.update();
+            //encoderDrive(DRIVE_SPEED, 4, 4, 4, 4, 4.0);
+            strafeRight(DRIVE_SPEED, 5);
             state = 4;
         }
-        //turn right so intake system is facing shipping hub
+        //move forward
         if (state == 4) {
-            telemetry.addData("State","4");
+            telemetry.addData("State","2");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
+            encoderDrive(DRIVE_SPEED, 5.5, 5.5, 5.5, 5.5, 4.0);
             state = 5;
         }
-        //move forward so intake system is right up against shipping hub
-        if (state == 5) {
-            telemetry.addData("State", "5");
-            telemetry.update();
-            encoderDrive(DRIVE_SPEED, 2, 2, 2, 2, 4.0);
-            state = 6;
-        }
         // deposit
-        if(state == 6){
+        if(state == 5){
             telemetry.addData("State", "6");
             telemetry.update();
-            retractFreight(3, 1);
-            state = 7;
+            retractFreight(3, -1);
+            state = 6;
         }
         //stop intake motors
-        if(state == 7){
+        if(state == 6){
             telemetry.addData("State", "7");
             telemetry.update();
             robot.leftIntake.setPower(0);
             robot.rightIntake.setPower(0);
-            state = 8;
+            state = 7;
         }
         //back up so robot can turn right and be in line to enter warehouse
-        if (state == 8) {
+        if (state == 7) {
             telemetry.addData("State", "8");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -1, -1, -1, -1, 4.0);
+            encoderDrive(DRIVE_SPEED, -2, -2, -2, -2, 4.0);
+            state = 8;
+        }
+        //lower lift
+        if (state == 8) {
+            telemetry.addData("State", "2");
+            telemetry.update();
+            //liftUp(2, -1);
+            setLiftPosition(robot.level1, 1);
             state = 9;
         }
-        //turn right so front of robot faces warehouse
+        //turn left
         if (state == 9) {
             telemetry.addData("State","9");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
+            encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
             state = 10;
         }
-        //move forward into warehouse
         if (state == 10) {
-            telemetry.addData("State", "10");
+            telemetry.addData("State","9");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 14, 14, 14, 14, 4.0);
+            encoderDrive(DRIVE_SPEED, -14, -14, -14, -14, 4.0);
             state = 11;
         }
         //stop robot
@@ -355,6 +356,72 @@ public class R1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
         robot.leftBack.setPower(-power);
         robot.rightBack.setPower(power);
     }
+    public void strafeLeft(double power, int distance) {
+        Orientation angles;
+        double error;
+        double k = 3/360.0;
+        double startAngle = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        int leftFrontTarget = robot.leftFront.getCurrentPosition() - (int)(distance * COUNTS_PER_INCH);
+        int rightFrontTarget = robot.rightFront.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+        int leftBackTarget = robot.leftBack.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+        int rightBackTarget = robot.rightBack.getCurrentPosition() - (int)(distance * COUNTS_PER_INCH);
+        robot.leftFront.setTargetPosition(leftFrontTarget);
+        robot.rightFront.setTargetPosition(rightFrontTarget);
+        robot.leftBack.setTargetPosition(leftBackTarget);
+        robot.rightBack.setTargetPosition(rightBackTarget);
 
+        while (opModeIsActive()
+                &&(robot.leftFront.getCurrentPosition() > leftFrontTarget && robot.rightFront.getCurrentPosition() < rightFrontTarget && robot.leftBack.getCurrentPosition() < leftBackTarget && robot.rightBack.getCurrentPosition() > rightBackTarget)) {
+            angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            //finds the angle given by the imu [-180, 180]
+            double angle = angles.firstAngle;
+            error = startAngle - angle;
+            robot.leftFront.setPower(-(power + (error * k)));
+            robot.rightFront.setPower((power + (error * k)));
+            robot.leftBack.setPower((power - (error * k)));
+            robot.rightBack.setPower(-(power - (error * k)));
+            telemetry.addData("error: ",error);
+            telemetry.addData("leftfront dest: ", leftFrontTarget);
+            telemetry.addData("leftFront pos: ",robot.leftFront.getCurrentPosition());
+
+
+            telemetry.update();
+        }
+        stopMotors();
+    }
+
+    public void strafeRight(double power, int distance) {
+        Orientation angles;
+        double error;
+        double k = 3/360.0;
+        double startAngle = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        int leftFrontTarget = robot.leftFront.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+        int rightFrontTarget = robot.rightFront.getCurrentPosition() - (int)(distance * COUNTS_PER_INCH);
+        int leftBackTarget = robot.leftBack.getCurrentPosition() - (int)(distance * COUNTS_PER_INCH);
+        int rightBackTarget = robot.rightBack.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+        robot.leftFront.setTargetPosition(leftFrontTarget);
+        robot.rightFront.setTargetPosition(rightFrontTarget);
+        robot.leftBack.setTargetPosition(leftBackTarget);
+        robot.rightBack.setTargetPosition(rightBackTarget);
+
+        while (opModeIsActive()
+                &&(robot.leftFront.getCurrentPosition() < leftFrontTarget && robot.rightFront.getCurrentPosition() > rightFrontTarget && robot.leftBack.getCurrentPosition() > leftBackTarget && robot.rightBack.getCurrentPosition() < rightBackTarget)) {
+            angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            //finds the angle given by the imu [-180, 180]
+            double angle = angles.firstAngle;
+            error = startAngle - angle;
+            robot.leftFront.setPower((power - (error * k)));
+            robot.rightFront.setPower(-(power - (error * k)));
+            robot.leftBack.setPower(-(power + (error * k)));
+            robot.rightBack.setPower((power + (error * k)));
+            telemetry.addData("error: ",error);
+            telemetry.addData("leftfront dest: ", leftFrontTarget);
+            telemetry.addData("leftFront pos: ",robot.leftFront.getCurrentPosition());
+
+
+            telemetry.update();
+        }
+        stopMotors();
+    }
 }
 

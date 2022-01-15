@@ -160,7 +160,7 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
             setLiftPosition(robot.down, 1);
             state = 10;
         }
-        //turn left so back of robot faces R2 spot
+        //strafe left
         if (state == 10) {
             telemetry.addData("State", "7");
             telemetry.update();
