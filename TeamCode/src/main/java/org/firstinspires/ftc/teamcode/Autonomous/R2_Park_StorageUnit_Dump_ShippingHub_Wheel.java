@@ -166,7 +166,7 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
             telemetry.update();
             //gyroTurn(DRIVE_SPEED, 90);
             //encoderDrive(DRIVE_SPEED, -5, 5, 5, -5, 4.0);
-            strafeLeft(0.3, 9);
+            strafeLeft(0.3, 10);
             state = 11;
         }
         //back up so back of robot almost hits wall
@@ -186,7 +186,7 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
         if (state == 11) {
             telemetry.addData("State", "11");
             telemetry.update();
-            spinWheel(4, 1);
+            spinWheel(4, -1);
             state = 12;
         }
         //stop duckWheel
