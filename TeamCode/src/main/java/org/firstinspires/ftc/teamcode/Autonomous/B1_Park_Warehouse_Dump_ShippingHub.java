@@ -356,5 +356,72 @@ public class B1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
         robot.leftBack.setPower(-power);
         robot.rightBack.setPower(power);
     }
+    public void strafeLeft(double power, int distance) {
+        Orientation angles;
+        double error;
+        double k = 3/360.0;
+        double startAngle = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        int leftFrontTarget = robot.leftFront.getCurrentPosition() - (int)(distance * COUNTS_PER_INCH);
+        int rightFrontTarget = robot.rightFront.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+        int leftBackTarget = robot.leftBack.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+        int rightBackTarget = robot.rightBack.getCurrentPosition() - (int)(distance * COUNTS_PER_INCH);
+        robot.leftFront.setTargetPosition(leftFrontTarget);
+        robot.rightFront.setTargetPosition(rightFrontTarget);
+        robot.leftBack.setTargetPosition(leftBackTarget);
+        robot.rightBack.setTargetPosition(rightBackTarget);
+
+        while (opModeIsActive()
+                &&(robot.leftFront.getCurrentPosition() > leftFrontTarget && robot.rightFront.getCurrentPosition() < rightFrontTarget && robot.leftBack.getCurrentPosition() < leftBackTarget && robot.rightBack.getCurrentPosition() > rightBackTarget)) {
+            angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            //finds the angle given by the imu [-180, 180]
+            double angle = angles.firstAngle;
+            error = startAngle - angle;
+            robot.leftFront.setPower(-(power + (error * k)));
+            robot.rightFront.setPower((power + (error * k)));
+            robot.leftBack.setPower((power - (error * k)));
+            robot.rightBack.setPower(-(power - (error * k)));
+            telemetry.addData("error: ",error);
+            telemetry.addData("leftfront dest: ", leftFrontTarget);
+            telemetry.addData("leftFront pos: ",robot.leftFront.getCurrentPosition());
+
+
+            telemetry.update();
+        }
+        stopMotors();
+    }
+
+    public void strafeRight(double power, int distance) {
+        Orientation angles;
+        double error;
+        double k = 3/360.0;
+        double startAngle = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        int leftFrontTarget = robot.leftFront.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+        int rightFrontTarget = robot.rightFront.getCurrentPosition() - (int)(distance * COUNTS_PER_INCH);
+        int leftBackTarget = robot.leftBack.getCurrentPosition() - (int)(distance * COUNTS_PER_INCH);
+        int rightBackTarget = robot.rightBack.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+        robot.leftFront.setTargetPosition(leftFrontTarget);
+        robot.rightFront.setTargetPosition(rightFrontTarget);
+        robot.leftBack.setTargetPosition(leftBackTarget);
+        robot.rightBack.setTargetPosition(rightBackTarget);
+
+        while (opModeIsActive()
+                &&(robot.leftFront.getCurrentPosition() < leftFrontTarget && robot.rightFront.getCurrentPosition() > rightFrontTarget && robot.leftBack.getCurrentPosition() > leftBackTarget && robot.rightBack.getCurrentPosition() < rightBackTarget)) {
+            angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            //finds the angle given by the imu [-180, 180]
+            double angle = angles.firstAngle;
+            error = startAngle - angle;
+            robot.leftFront.setPower((power - (error * k)));
+            robot.rightFront.setPower(-(power - (error * k)));
+            robot.leftBack.setPower(-(power + (error * k)));
+            robot.rightBack.setPower((power + (error * k)));
+            telemetry.addData("error: ",error);
+            telemetry.addData("leftfront dest: ", leftFrontTarget);
+            telemetry.addData("leftFront pos: ",robot.leftFront.getCurrentPosition());
+
+
+            telemetry.update();
+        }
+        stopMotors();
+    }
 }
 
