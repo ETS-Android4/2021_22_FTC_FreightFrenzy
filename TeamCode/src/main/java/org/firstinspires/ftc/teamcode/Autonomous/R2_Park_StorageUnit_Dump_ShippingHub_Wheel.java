@@ -311,15 +311,22 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
     METHODS FOR ALL AUTONOMOUS
   */
     public void retractFreight(double freightTime, double freightSpeed) {
+        runtime.reset();
+
         while (opModeIsActive() &&
-                (runtime.seconds() < freightTime)) {
+                (runtime.seconds() < freightTime))
+        {
+
             robot.leftIntake.setPower(freightSpeed);
             robot.rightIntake.setPower(freightSpeed);
         }
     }
     public void spinWheel(double wheelTime, double wheelSpeed) {
+        runtimeDuck.reset();
+
         while (opModeIsActive() &&
-                (runtimeDuck.seconds() < wheelTime)) {
+                (runtimeDuck.seconds() < wheelTime))
+        {
             robot.duckMotor.setPower(wheelSpeed);
         }
     }
