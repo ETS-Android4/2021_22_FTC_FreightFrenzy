@@ -90,15 +90,15 @@ public class B2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
 
 
             waitForStart();
-            state = 2;
+            state = 1;
         }
         //lifting attachment
-        /*if (state == 1) {
+        if (state == 1) {
             telemetry.addData("State", "2");
             telemetry.update();
-            liftUp(3, -0.5);
+            setLiftPosition(robot.level2, 1.0);
             state = 2;
-        }*/
+        }
         //stop lift
         if (state == 2) {
             telemetry.addData("State", "3");
@@ -117,7 +117,8 @@ public class B2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
         if (state == 4) {
             telemetry.addData("State", "2");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
+            gyroTurn(DRIVE_SPEED, 90);
+            //encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
             state = 5;
         }
         //move forward to shipping hub
@@ -131,7 +132,7 @@ public class B2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
         if (state == 6) {
             telemetry.addData("State", "4");
             telemetry.update();
-            retractFreight(3, 1);
+            retractFreight(3, -1);
             state = 7;
         }
         //stop intake motors
@@ -142,58 +143,75 @@ public class B2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
             robot.rightIntake.setPower(0);
             state = 8;
         }
-        //back up until back of robot almost hits the wall
+        //back up so robot has room to turn right
         if (state == 8) {
             telemetry.addData("State", "6");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -9.5, -9.5, -9.5, -9.5, 4.0);
+            encoderDrive(DRIVE_SPEED, -9, -9, -9, -9, 4.0);
             state = 9;
         }
-        //turn right so duck wheel is in line with wheel
+        //bring lift down
         if (state == 9) {
+            telemetry.addData("State", "2");
+            telemetry.update();
+            //liftUp(2, -1);
+            setLiftPosition(robot.down, 1);
+            state = 10;
+        }
+        //strafe left against wall
+        if (state == 10) {
+            telemetry.addData("State", "7");
+            telemetry.update();
+            //gyroTurn(DRIVE_SPEED, 90);
+            //encoderDrive(DRIVE_SPEED, -5, 5, 5, -5, 4.0);
+            strafeLeft(0.3, 10);
+            state = 11;
+        }
+        //turn right so duck wheel is in line with wheel
+        if (state == 11) {
             telemetry.addData("State", "7");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
-            state = 10;
+            state = 12;
         }
-        //back up so duck wheel hits wheel and can begin spinning it
-        if (state == 10) {
-            telemetry.addData("State", "8");
+        //strafe right to hit duck wheel
+        if (state == 12) {
+            telemetry.addData("State", "7");
             telemetry.update();
-            encoderDrive(0.3, -8, -8, -8, -8, 4.0);
-            state = 11;
+            //gyroTurn(DRIVE_SPEED, 90);
+            //encoderDrive(DRIVE_SPEED, -5, 5, 5, -5, 4.0);
+            strafeRight(0.3, 10);
+            state = 13;
         }
         //spin wheel
-        if (state == 11) {
+        if (state == 13) {
             telemetry.addData("State", "11");
             telemetry.update();
             spinWheel(7, 1);
-            state = 12;
+            state = 14;
         }
         //stop duckWheel
-        if (state == 12) {
+        if (state == 14) {
             telemetry.addData("State", "12");
             telemetry.update();
             robot.duckMotor.setPower(0);
             robot.duckMotor.setPower(0);
-            state = 13;
+            state = 15;
         }
-        //move forward into storage unit
-        if (state == 13) {
+        //Move forward to storage unit
+        if (state == 15) {
             telemetry.addData("State", "13");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 5, 5, 5, 5, 4.0);
-            state = 14;
+            //strafeLeft(DRIVE_SPEED, 5);
+            state = 16;
         }
         //stop robot
-        if (state == 14) {
+        if (state == 16) {
             telemetry.addData("State", "18");
             telemetry.update();
-            robot.leftFront.setPower(0);
-            robot.rightFront.setPower(0);
-            robot.leftBack.setPower(0);
-            robot.rightBack.setPower(0);
-            state = 15;
+            stopMotors();
+            state = 17;
         }
         //
         //strafe right

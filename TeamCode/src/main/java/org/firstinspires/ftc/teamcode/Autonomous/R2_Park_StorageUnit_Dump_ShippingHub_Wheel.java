@@ -197,7 +197,7 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
             robot.duckMotor.setPower(0);
             state = 13;
         }
-        //move forward
+        //strafe right to storage unit
         if (state == 13) {
             telemetry.addData("State", "13");
             telemetry.update();
