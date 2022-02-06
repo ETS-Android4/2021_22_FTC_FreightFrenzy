@@ -47,6 +47,7 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
     HardwareMap_CompetitionBot robot = new HardwareMap_CompetitionBot();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
     private ElapsedTime runtimeDuck = new ElapsedTime();
+    private ElapsedTime runtimeLift = new ElapsedTime();
 
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
@@ -339,7 +340,16 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
         robot.lift.setPower(0);
     }
 
+    public void liftUp(double liftTime, double liftSpeed) {
 
+        runtimeLift.reset();
+
+        while (opModeIsActive() &&
+                (runtimeLift.seconds() < liftTime)) {
+
+            robot.lift.setPower(liftSpeed);
+        }
+    }
 
 
     public void gyroTurn (double power, double target)
