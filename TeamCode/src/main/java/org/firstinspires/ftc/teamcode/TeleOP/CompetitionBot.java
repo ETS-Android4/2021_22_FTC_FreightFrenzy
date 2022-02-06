@@ -121,8 +121,8 @@ public class CompetitionBot extends OpMode {
             telemetry.addData("Button","A2");
             //A is retract
         } else if (isButtonB2) {
-            robot.leftIntake.setPower(1);
-            robot.rightIntake.setPower(1);
+            robot.leftIntake.setPower(0.5);
+            robot.rightIntake.setPower(0.5);
             telemetry.addData("Button","B2");
             //B is extend
         } else if (isButtonX2) {
@@ -132,8 +132,8 @@ public class CompetitionBot extends OpMode {
             //X is retract, but with full power
 
         }  else if (isButtonY2) {
-            robot.leftIntake.setPower(-1);
-            robot.rightIntake.setPower(-1);
+            robot.leftIntake.setPower(-0.5);
+            robot.rightIntake.setPower(-0.5);
             telemetry.addData("Button","Y2");
             //X is retract, but with full power
         }else {
