@@ -73,15 +73,6 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
             telemetry.addData("Status", "Resetting Encoders");    //
             telemetry.update();
 
-            robot.leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            robot.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             // Send telemetry message to indicate successful Encoder reset
             telemetry.addData("Path0", "Starting at %7d :%7d",
@@ -332,7 +323,9 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
     }
 
     public void setLiftPosition(int position, double speed) {
+
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         robot.lift.setTargetPosition(position);
         robot.lift.setPower(speed);
 
