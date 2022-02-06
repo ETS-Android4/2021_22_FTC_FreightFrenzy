@@ -53,7 +53,7 @@ public class HardwareMap_CompetitionBot
     public DigitalChannel redLED;
     public DigitalChannel greenLED;
 
-    public final double THRESHOLD = 3;
+    public final double THRESHOLD = 4;
 
    //encoder value for levels 1 and 2 of shipping hub
    public int level1 = 1805;
