@@ -89,8 +89,8 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
         if (state == 1) {
             telemetry.addData("State", "2");
             telemetry.update();
-           //liftUp(2, -1);
-            setLiftPosition(robot.level2, 1);
+            liftUp(2, 1);
+            //setLiftPosition(robot.level2, 1);
             state = 2;
         }
         //stop lift
@@ -148,8 +148,8 @@ public class R2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
         if (state == 9) {
             telemetry.addData("State", "2");
             telemetry.update();
-            //liftUp(2, -1);
-            setLiftPosition(robot.down, 1);
+            liftUp(2, -1);
+            //setLiftPosition(robot.down, 1);
             state = 10;
         }
         //strafe left
