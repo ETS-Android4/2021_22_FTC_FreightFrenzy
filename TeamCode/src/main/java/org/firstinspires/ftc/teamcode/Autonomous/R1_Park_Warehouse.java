@@ -107,8 +107,8 @@ public class R1_Park_Warehouse extends LinearOpMode {
         if (state == 2) {
             telemetry.addData("State","2");
             telemetry.update();
-            //encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
-            gyroTurn(DRIVE_SPEED, 90);
+            encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
+            //gyroTurn(DRIVE_SPEED, 90);
             state = 4;
         }
 

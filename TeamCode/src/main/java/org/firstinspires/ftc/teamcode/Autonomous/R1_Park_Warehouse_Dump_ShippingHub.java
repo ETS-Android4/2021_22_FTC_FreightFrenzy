@@ -46,7 +46,7 @@ public class R1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
     /* Declare OpMode members. */
     HardwareMap_CompetitionBot robot   = new HardwareMap_CompetitionBot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
-
+    private ElapsedTime runtimeLift = new ElapsedTime();
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
@@ -92,12 +92,13 @@ public class R1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
             waitForStart();
             state = 1;
         }
-        //lift
+        //lift up
         if (state == 1) {
             telemetry.addData("State", "2");
             telemetry.update();
             //liftUp(2, -1);
-            setLiftPosition(robot.level2, 1);
+            //setLiftPosition(robot.level2, 1);
+            liftUp(2.3, 1);
             state = 2;
         }
         //stop lift
@@ -144,25 +145,26 @@ public class R1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
             encoderDrive(DRIVE_SPEED, -2, -2, -2, -2, 4.0);
             state = 8;
         }
-        //lower lift
-        if (state == 8) {
-            telemetry.addData("State", "2");
-            telemetry.update();
-            //liftUp(2, -1);
-            setLiftPosition(robot.level1, 1);
-            state = 9;
-        }
         //turn left
-        if (state == 9) {
+        if (state == 8) {
             telemetry.addData("State","9");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
-            state = 10;
+            state = 9;
         }
-        if (state == 10) {
+        if (state == 9) {
             telemetry.addData("State","9");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, -14, -14, -14, -14, 4.0);
+            state = 10;
+        }
+        //lower lift
+        if (state == 10) {
+            telemetry.addData("State", "2");
+            telemetry.update();
+            //liftUp(2, -1);
+            //setLiftPosition(robot.level1, 1);
+            liftUp(2.5, -1);
             state = 11;
         }
         //stop robot
@@ -423,6 +425,15 @@ public class R1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
         }
         stopMotors();
     }
+    public void liftUp(double liftTime, double liftSpeed) {
 
+        runtimeLift.reset();
+
+        while (opModeIsActive() &&
+                (runtimeLift.seconds() < liftTime)) {
+
+            robot.lift.setPower(liftSpeed);
+        }
+    }
 }
 

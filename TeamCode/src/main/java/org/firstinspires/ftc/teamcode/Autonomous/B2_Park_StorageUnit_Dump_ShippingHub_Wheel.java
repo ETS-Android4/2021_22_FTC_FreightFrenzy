@@ -97,7 +97,7 @@ public class B2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
             telemetry.addData("State", "2");
             telemetry.update();
             //setLiftPosition(robot.level2, 1.0);
-            liftUp(2.3, 1);
+            liftUp(1.5, 1);
             state = 2;
         }
         //stop lift
@@ -145,21 +145,23 @@ public class B2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
             robot.rightIntake.setPower(0);
             state = 8;
         }
+        //back up a little so when strafing the robot doesn't hit the shipping hub
         if (state == 8) {
             telemetry.addData("State", "3");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -1.5, -1.5, -1.5, -1.5, 4.0);
+            //new path
+            encoderDrive(DRIVE_SPEED, -1, -1, -1, -1, 4.0);
             state = 9;
         }
-        //bring lift down
         if (state == 9) {
-            telemetry.addData("State", "2");
+            telemetry.addData("State", "3");
             telemetry.update();
-            liftUp(1.5, -1);
-            //setLiftPosition(robot.down, 1);
+            //new path
+            //encoderDrive(DRIVE_SPEED, -1.5, -1.5, -1.5, -1.5, 4.0);
+            strafeLeft(DRIVE_SPEED, 2);
             state = 10;
         }
-        //turn right so duck wheel is in line with wheel
+        //turn right so the robot can strafe right
         if (state == 10) {
             telemetry.addData("State", "7");
             telemetry.update();
@@ -173,6 +175,7 @@ public class B2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
             telemetry.update();
             //gyroTurn(DRIVE_SPEED, 90);
             //encoderDrive(DRIVE_SPEED, -5, 5, 5, -5, 4.0);
+            //7.5/8 is too far back against the wall (hurts the duck wheel)
             strafeLeft(0.5, 7);
             state = 12;
         }
@@ -181,7 +184,7 @@ public class B2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
             telemetry.addData("State", "7");
             telemetry.update();
             //gyroTurn(DRIVE_SPEED, 90);
-            encoderDrive(DRIVE_SPEED, -7, -7, -7, -7, 4.0);
+            encoderDrive(0.3, -10.7, -10.7, -10.7, -10.7, 4.0);
             //strafeLeft(0.3, 10);
             state = 13;
         }
@@ -204,16 +207,24 @@ public class B2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
         if (state == 15) {
             telemetry.addData("State", "13");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 4, 4, 4, 4, 4.0);
+            encoderDrive(DRIVE_SPEED, 4.25, 4.25, 4.25, 4.25 , 4.0);
             //strafeLeft(DRIVE_SPEED, 5);
             state = 16;
         }
-        //stop robot
+        //bring lift down
         if (state == 16) {
+            telemetry.addData("State", "2");
+            telemetry.update();
+            liftUp(1.5, -1);
+            //setLiftPosition(robot.down, 1);
+            state = 17;
+        }
+        //stop robot
+        if (state == 17) {
             telemetry.addData("State", "18");
             telemetry.update();
             stopMotors();
-            state = 17;
+            state = 18;
         }
         //
         //strafe right
@@ -400,7 +411,7 @@ public class B2_Park_StorageUnit_Dump_ShippingHub_Wheel extends LinearOpMode {
         robot.leftBack.setPower(-power);
         robot.rightBack.setPower(power);
     }
-    public void strafeLeft(double power, int distance) {
+    public void strafeLeft(double power, double distance) {
         Orientation angles;
         double error;
         double k = 3/360.0;

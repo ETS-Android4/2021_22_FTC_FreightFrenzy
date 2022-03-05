@@ -99,7 +99,7 @@ public class B2_Park_StorageUnit extends LinearOpMode {
         if (state == 1){
             telemetry.addData("State","1");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 6.5, 6.5,6.5, 6.5, 4.0);
+            encoderDrive(DRIVE_SPEED, 6.75, 6.75,6.75, 6.75, 4.0);
             //facing Forward strafe left one foot.
             state = 2;
         }

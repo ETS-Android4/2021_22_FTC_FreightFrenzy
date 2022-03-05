@@ -46,7 +46,7 @@ public class B1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
     /* Declare OpMode members. */
     HardwareMap_CompetitionBot robot   = new HardwareMap_CompetitionBot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
-
+    private ElapsedTime runtimeLift = new ElapsedTime();
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
@@ -96,98 +96,109 @@ public class B1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
         if (state == 1){
             telemetry.addData("State","1");
             telemetry.update();
-
+            liftUp(2, 1);
             state = 2;
         }
+        //stop lift
+        if (state == 2) {
+            telemetry.addData("State", "3");
+            telemetry.update();
+            robot.lift.setPower(0);
+            state = 3;
+        }
         //move forward to shipping hub
-        if (state == 1){
+        if (state == 3){
             telemetry.addData("State","1");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 4, 4, 4, 4, 4.0);
-            state = 2;
+            state = 4;
         }
         //turn right so that intake system faces shipping hub
-        if (state == 2) {
+        if (state == 4) {
             telemetry.addData("State","2");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 5, -5, 5, -5, 4.0);
-            state = 3;
+            state = 5;
         }
         //move forward so that robot is right in front of shipping hub
-        if (state == 3) {
+        if (state == 5) {
             telemetry.addData("State", "3");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 5, 5, 5, 5, 4.0);
-            state = 4;
+            state = 6;
         }
         //turn left so that the intake system is facing shipping hub
-        if (state == 4) {
+        if (state == 6) {
             telemetry.addData("State","4");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
-            state = 5;
+            state = 7;
         }
         //move forward so that intake system is right up against shipping hub
-        if (state == 5) {
+        if (state == 7) {
             telemetry.addData("State", "5");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 2, 2, 2, 2, 4.0);
-            state = 6;
+            state = 8;
         }
         //deposit freight into bottom level of shipping hub
-        if(state == 6){
+        if(state == 8){
             telemetry.addData("State", "6");
             telemetry.update();
-            retractFreight(3, 1);
-            state = 7;
+            retractFreight(3, -1);
+            state = 9;
         }
         //stop intake motors
-        if(state == 7){
+        if(state == 9){
             telemetry.addData("State", "7");
             telemetry.update();
             robot.leftIntake.setPower(0);
             robot.rightIntake.setPower(0);
-            state = 8;
+            state = 10;
         }
         //back up so that robot has room to turn towards warehouse
-        if (state == 8) {
+        if (state == 10) {
             telemetry.addData("State", "8");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, -1, -1, -1, -1, 4.0);
-            state = 9;
+            state = 11;
         }
         //turn left so the robot's front is pointed towards warehouse
-        if (state == 9) {
+        if (state == 11) {
             telemetry.addData("State","9");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
-            state = 10;
+            state = 12;
         }
         //move forward straight into the warehouse
-        if (state == 10) {
+        if (state == 12) {
             telemetry.addData("State", "10");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 14, 14, 14, 14, 4.0);
-            state = 11;
+            state = 13;
+        }
+        //bring down lift
+        if (state == 13) {
+            telemetry.addData("State", "2");
+            telemetry.update();
+            liftUp(2, -1);
+            //setLiftPosition(robot.down, 1);
+            state = 14;
         }
         //stop robot
-        if(state == 11){
+        if(state == 14){
             telemetry.addData("State", "11");
             telemetry.update();
             robot.leftFront.setPower(0);
             robot.rightFront.setPower(0);
             robot.leftBack.setPower(0);
             robot.rightBack.setPower(0);
-            state = 12;
+            state = 15;
         }
         sleep(1000);     // pause for servos to move
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
-
-
-
-
     }
 
     /*
@@ -422,6 +433,16 @@ public class B1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
             telemetry.update();
         }
         stopMotors();
+    }
+    public void liftUp(double liftTime, double liftSpeed) {
+
+        runtimeLift.reset();
+
+        while (opModeIsActive() &&
+                (runtimeLift.seconds() < liftTime)) {
+
+            robot.lift.setPower(liftSpeed);
+        }
     }
 }
 
