@@ -98,7 +98,7 @@ public class R1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
             telemetry.update();
             //liftUp(2, -1);
             //setLiftPosition(robot.level2, 1);
-            liftUp(2.3, 1);
+            liftUp(2, 1);
             state = 2;
         }
         //stop lift
@@ -113,14 +113,14 @@ public class R1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
             telemetry.addData("State","1");
             telemetry.update();
             //encoderDrive(DRIVE_SPEED, 4, 4, 4, 4, 4.0);
-            strafeRight(DRIVE_SPEED, 5);
+            strafeRight(DRIVE_SPEED, 5.5);
             state = 4;
         }
         //move forward
         if (state == 4) {
             telemetry.addData("State","2");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 5.5, 5.5, 5.5, 5.5, 4.0);
+            encoderDrive(0.3, 6.5, 6.5, 6.5, 6.5, 4.0);
             state = 5;
         }
         // deposit
@@ -164,17 +164,14 @@ public class R1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
             telemetry.update();
             //liftUp(2, -1);
             //setLiftPosition(robot.level1, 1);
-            liftUp(2.5, -1);
+            liftUp(1, -1);
             state = 11;
         }
         //stop robot
         if(state == 11){
             telemetry.addData("State", "11");
             telemetry.update();
-            robot.leftFront.setPower(0);
-            robot.rightFront.setPower(0);
-            robot.leftBack.setPower(0);
-            robot.rightBack.setPower(0);
+            stopMotors();
             state = 12;
         }
         //stop all motion
@@ -392,7 +389,7 @@ public class R1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
         stopMotors();
     }
 
-    public void strafeRight(double power, int distance) {
+    public void strafeRight(double power, double distance) {
         Orientation angles;
         double error;
         double k = 3/360.0;

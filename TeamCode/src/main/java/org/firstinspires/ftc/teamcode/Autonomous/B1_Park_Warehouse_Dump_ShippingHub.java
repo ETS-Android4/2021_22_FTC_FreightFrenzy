@@ -174,7 +174,7 @@ public class B1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
         if (state == 12) {
             telemetry.addData("State", "10");
             telemetry.update();
-            encoderDrive(1, 13, 13, 13, 13, 4.0);
+            encoderDrive(1, 14, 14, 14, 14, 4.0);
             state = 13;
         }
         //bring down lift
@@ -189,10 +189,7 @@ public class B1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
         if(state == 14){
             telemetry.addData("State", "11");
             telemetry.update();
-            robot.leftFront.setPower(0);
-            robot.rightFront.setPower(0);
-            robot.leftBack.setPower(0);
-            robot.rightBack.setPower(0);
+            stopMotors();
             state = 15;
         }
         sleep(1000);     // pause for servos to move
