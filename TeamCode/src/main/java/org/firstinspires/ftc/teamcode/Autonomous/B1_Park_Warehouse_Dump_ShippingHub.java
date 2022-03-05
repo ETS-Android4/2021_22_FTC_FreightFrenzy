@@ -134,11 +134,11 @@ public class B1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
             encoderDrive(DRIVE_SPEED, -5, 5, -5, -5, 4.0);
             state = 7;
         }
-        //move forward so that intake system is right up against shipping hub
+        //move forward so that intake system is right up against shipping hube
         if (state == 7) {
             telemetry.addData("State", "5");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 2, 2, 2, 2, 4.0);
+            encoderDrive(0.3, 2.5, 2.5, 2.5, 2.5, 4.0);
             state = 8;
         }
         //deposit freight into bottom level of shipping hub
@@ -160,7 +160,7 @@ public class B1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
         if (state == 10) {
             telemetry.addData("State", "8");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, -1, -1, -1, -1, 4.0);
+            encoderDrive(DRIVE_SPEED, -2, -2, -2, -2, 4.0);
             state = 11;
         }
         //turn left so the robot's front is pointed towards warehouse
@@ -174,14 +174,14 @@ public class B1_Park_Warehouse_Dump_ShippingHub extends LinearOpMode {
         if (state == 12) {
             telemetry.addData("State", "10");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 14, 14, 14, 14, 4.0);
+            encoderDrive(1, 13, 13, 13, 13, 4.0);
             state = 13;
         }
         //bring down lift
         if (state == 13) {
             telemetry.addData("State", "2");
             telemetry.update();
-            liftUp(2, -1);
+            liftUp(0.75, -1);
             //setLiftPosition(robot.down, 1);
             state = 14;
         }
